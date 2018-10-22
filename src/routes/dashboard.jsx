@@ -21,9 +21,51 @@ const dashboardRoutes = [
   {
     path: "/dashboard",
     sidebarName: "Dashboard",
-    navbarName: "Material Dashboard",
+    navbarName: "Dashboard",
     icon: Dashboard,
     component: DashboardPage
+  },
+  {
+    path: "/table",
+    sidebarName: "Projects",
+    navbarName: "Projects",
+    icon: "content_paste",
+    component: TableList
+  },
+  {
+    path: "/typography",
+    sidebarName: "Buildings",
+    navbarName: "Buildings",
+    icon: "location_city",
+    component: Typography
+  },
+  {
+    path: "/icons",
+    sidebarName: "Filings",
+    navbarName: "Filings",
+    icon: "ballot",
+    component: Icons
+  },
+  {
+    path: "/maps",
+    sidebarName: "Violations",
+    navbarName: "Violations",
+    icon: "warning",
+    component: Maps
+  },
+  {
+    path: "/tasks",
+    sidebarName: "Tasks",
+    navbarName: "Tasks",
+    icon: "assignment_turned_in",
+    component: NotificationsPage
+  },
+  {
+    path: "/notifications",
+    sidebarName: "Contacts",
+    navbarName: "Contacts",
+    icon: "people",
+    component: NotificationsPage
   },
   {
     path: "/user",
@@ -32,48 +74,7 @@ const dashboardRoutes = [
     icon: Person,
     component: UserProfile
   },
-  {
-    path: "/table",
-    sidebarName: "Table List",
-    navbarName: "Table List",
-    icon: "content_paste",
-    component: TableList
-  },
-  {
-    path: "/typography",
-    sidebarName: "Typography",
-    navbarName: "Typography",
-    icon: LibraryBooks,
-    component: Typography
-  },
-  {
-    path: "/icons",
-    sidebarName: "Icons",
-    navbarName: "Icons",
-    icon: BubbleChart,
-    component: Icons
-  },
-  {
-    path: "/maps",
-    sidebarName: "Maps",
-    navbarName: "Map",
-    icon: LocationOn,
-    component: Maps
-  },
-  {
-    path: "/notifications",
-    sidebarName: "Notifications",
-    navbarName: "Notifications",
-    icon: Notifications,
-    component: NotificationsPage
-  },
-  {
-    path: "/upgrade-to-pro",
-    sidebarName: "Upgrade To PRO",
-    navbarName: "Upgrade To PRO",
-    icon: Unarchive,
-    component: UpgradeToPro
-  },
+
   { redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }
 ];
 

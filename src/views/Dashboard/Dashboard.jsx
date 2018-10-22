@@ -4,9 +4,13 @@ import PropTypes from "prop-types";
 import ChartistGraph from "react-chartist";
 // @material-ui/core
 import withStyles from "@material-ui/core/styles/withStyles";
-import Icon from "@material-ui/core/Icon";
+import Icon from '@mdi/react'
+import { mdiWorker } from '@mdi/js'
 // @material-ui/icons
 import Store from "@material-ui/icons/Store";
+import ThumbUp from "@material-ui/icons/ThumbUp";
+import Ballot from "@material-ui/icons/Ballot";
+import AssignmentTurnedIn from "@material-ui/icons/AssignmentTurnedIn";
 import Warning from "@material-ui/icons/Warning";
 import DateRange from "@material-ui/icons/DateRange";
 import LocalOffer from "@material-ui/icons/LocalOffer";
@@ -60,9 +64,9 @@ class Dashboard extends React.Component {
             <Card>
               <CardHeader color="warning" stats icon>
                 <CardIcon color="warning">
-                  <Icon>content_copy</Icon>
+                  <AssignmentTurnedIn />
                 </CardIcon>
-                <p className={classes.cardCategory}>Used Space</p>
+                <p className={classes.cardCategory}>Outstanding Tasks</p>
                 <h3 className={classes.cardTitle}>
                   49/50 <small>GB</small>
                 </h3>
@@ -83,9 +87,9 @@ class Dashboard extends React.Component {
             <Card>
               <CardHeader color="success" stats icon>
                 <CardIcon color="success">
-                  <Store />
+                  <Ballot />
                 </CardIcon>
-                <p className={classes.cardCategory}>Revenue</p>
+                <p className={classes.cardCategory}>New Filings</p>
                 <h3 className={classes.cardTitle}>$34,245</h3>
               </CardHeader>
               <CardFooter stats>
@@ -100,9 +104,9 @@ class Dashboard extends React.Component {
             <Card>
               <CardHeader color="danger" stats icon>
                 <CardIcon color="danger">
-                  <Icon>info_outline</Icon>
+                  <ThumbUp />
                 </CardIcon>
-                <p className={classes.cardCategory}>Fixed Issues</p>
+                <p className={classes.cardCategory}>Approved Jobs</p>
                 <h3 className={classes.cardTitle}>75</h3>
               </CardHeader>
               <CardFooter stats>
@@ -117,9 +121,13 @@ class Dashboard extends React.Component {
             <Card>
               <CardHeader color="info" stats icon>
                 <CardIcon color="info">
-                  <Accessibility />
+                  <Icon
+                    path={mdiWorker}
+                    size={2}
+                    color="white"
+                  />
                 </CardIcon>
-                <p className={classes.cardCategory}>Followers</p>
+                <p className={classes.cardCategory}>Active Permits</p>
                 <h3 className={classes.cardTitle}>+245</h3>
               </CardHeader>
               <CardFooter stats>
