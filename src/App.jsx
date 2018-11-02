@@ -87,6 +87,7 @@ class App extends React.Component {
       }
     };
     const user = this.props.firebase.auth().currentUser;
+    console.log("user", user);
     if (!this.state.isSignedIn) {
       return (
         <Router history={hist}>
@@ -106,7 +107,12 @@ class App extends React.Component {
         <Switch>
           {indexRoutes.map((prop, key) => {
             return (
-              <Route path={prop.path} component={prop.component} key={key} />
+              <Route
+                path={prop.path}
+                component={prop.component}
+                key={key}
+                user={this.state.user}
+              />
             );
           })}
         </Switch>

@@ -62,6 +62,8 @@ class Dashboard extends React.Component {
     this.setState({ value: index });
   };
   render() {
+
+    console.log(this.props);
     const { classes } = this.props;
     return (
       <div>
@@ -146,7 +148,7 @@ class Dashboard extends React.Component {
           </GridItem>
         </GridContainer>
         <GridContainer>
-          <Updates user={this.state.user}/>
+         {/*  <Updates user={this.props.user} userID={this.props.user.ID} /> */}
         </GridContainer>
       </div>
     );
