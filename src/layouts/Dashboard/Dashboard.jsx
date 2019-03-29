@@ -11,6 +11,13 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import Header from "components/Header/Header.jsx";
 import Footer from "components/Footer/Footer.jsx";
 import Sidebar from "components/Sidebar/Sidebar.jsx";
+import Dashboard from "views/Dashboard/Dashboard.jsx";
+import FilingList from "views/FilingList/FilingList.jsx";
+import ProjectList from "views/ProjectList/ProjectList.jsx";
+
+
+import ProjectDetail from "views/ProjectDetail/ProjectDetail.jsx";
+import FormDetail from "views/ProjectDetail/FormDetail.jsx";
 
 import dashboardRoutes from "routes/dashboard.jsx";
 
@@ -85,14 +92,74 @@ class App extends React.Component {
             handleDrawerToggle={this.handleDrawerToggle}
             {...rest}
           />
-          {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
-          {this.getRoute() ? (
+
             <div className={classes.content}>
-              <div className={classes.container}>{switchRoutes}</div>
+            <Switch>
+                <Route
+                  exact
+                  path="/Buildings"
+                  render={props => (
+                    <BuildingList user={this.props.user} {...props} />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/Projects"
+                  render={props => (
+                    <ProjectList
+                      handleProjectClick={this.handleProjectClick}
+                      user={this.props.user}
+                      projects={this.props.projects}
+                      {...props}
+                    />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/AddProject"
+                  render={props => (
+                    <ProjectAdd user={this.props.user} {...props} />
+                  )}
+                />
+                <Route
+                  path="/ProjectDetail/:projectId"
+                  component={ProjectDetail}
+                />
+                <Route
+                  path="/FormDetail/:formId"
+                  render={props => (
+                    <FormDetail
+                      user={this.props.user}
+                      pdfUrl="/static/pdf/pw1.pdf"
+                      licenseKey="rf306vEoMRZ7Mnz3oUOdRjdr1keZ_k0igzwA6wijcltfwYzsKxyZgh4XcRsam"
+                      {...props}
+                    />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/Filings"
+                  render={props => (
+                    <FilingList user={this.props.user} {...props} />
+                  )}
+                />
+  {/*               <Route
+                  exact
+                  path="/Tasks"
+                  render={props => (
+                    <TaskList user={this.props.user} {...props} />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/Violations"
+                  render={props => (
+                    <ViolationList user={this.props.user} {...props} />
+                  )}
+                /> */}
+              </Switch>
             </div>
-          ) : (
-            <div className={classes.map}>{switchRoutes}</div>
-          )}
+
           {this.getRoute() ? <Footer /> : null}
         </div>
       </div>

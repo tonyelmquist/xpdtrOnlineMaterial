@@ -6,8 +6,8 @@ import PropTypes from "prop-types";
 import ChartistGraph from "react-chartist";
 // @material-ui/core
 import withStyles from "@material-ui/core/styles/withStyles";
-import Icon from '@mdi/react'
-import { mdiWorker } from '@mdi/js'
+import Icon from "@mdi/react";
+import { mdiWorker } from "@mdi/js";
 // @material-ui/icons
 import Store from "@material-ui/icons/Store";
 import ThumbUp from "@material-ui/icons/ThumbUp";
@@ -26,7 +26,7 @@ import Cloud from "@material-ui/icons/Cloud";
 // core components
 import GridItem from "components/Grid/GridItem.jsx";
 import GridContainer from "components/Grid/GridContainer.jsx";
-import Table from "components/Table/Table.jsx";
+import CustomTable from "components/CustomTable/CustomTable.jsx";
 import Tasks from "components/Tasks/Tasks.jsx";
 import CustomTabs from "components/CustomTabs/CustomTabs.jsx";
 import Danger from "components/Typography/Danger.jsx";
@@ -35,7 +35,7 @@ import CardHeader from "components/Card/CardHeader.jsx";
 import CardIcon from "components/Card/CardIcon.jsx";
 import CardBody from "components/Card/CardBody.jsx";
 import CardFooter from "components/Card/CardFooter.jsx";
-import Updates from "../Updates"
+import Updates from "../Updates";
 
 import { withFirebase, firebaseConnect } from "react-redux-firebase";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
@@ -127,11 +127,7 @@ class Dashboard extends React.Component {
             <Card>
               <CardHeader color="info" stats icon>
                 <CardIcon color="info">
-                  <Icon
-                    path={mdiWorker}
-                    size={2}
-                    color="white"
-                  />
+                  <Icon path={mdiWorker} size={2} color="white" />
                 </CardIcon>
                 <p className={classes.cardCategory}>Active Permits</p>
                 <h3 className={classes.cardTitle}>+245</h3>
@@ -145,9 +141,7 @@ class Dashboard extends React.Component {
             </Card>
           </GridItem>
         </GridContainer>
-        <GridContainer>
-          <Updates user={this.state.user}/>
-        </GridContainer>
+        <GridContainer />
       </div>
     );
   }
@@ -157,5 +151,12 @@ Dashboard.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(dashboardStyle)(Dashboard);
-
+export default compose(
+  firebaseConnect(props => [
+    { path: "projects" } // string equivalent 'todos'
+  ]),
+  connect((state, props) => ({
+    projects: state.firebase.data.projects
+  })),
+  withStyles(dashboardStyle)
+)(Dashboard);

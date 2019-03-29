@@ -1,10 +1,5 @@
 import React, { Component } from "react";
-import { Icon, Modal, Header, Button} from "semantic-ui-react";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import { Table, Icon, Modal, Header, Button} from "semantic-ui-react";
 
 class FilingListItem extends Component {
   constructor(props) {
@@ -33,15 +28,15 @@ class FilingListItem extends Component {
   render() {
     const { filingId, filing } = this.props;
     return (
-      <TableRow>
-        <TableCell>{filing["DOBNumber"]}</TableCell>
-        <TableCell>{filing["project"]}</TableCell>
-        <TableCell>{filing["created"]}</TableCell>
-        <TableCell>{filing["applicant"]}</TableCell>
-        <TableCell>{filing["filingRep"]}</TableCell>
-                <TableCell>{filing["efiled"]}</TableCell>
-        <TableCell>{filing["description"]}</TableCell>
-         <TableCell>
+      <Table.Row>
+        <Table.Cell>{filing["DOBNumber"]}</Table.Cell>
+        <Table.Cell>{filing["project"]}</Table.Cell>
+        <Table.Cell>{filing["created"]}</Table.Cell>
+        <Table.Cell>{filing["applicant"]}</Table.Cell>
+        <Table.Cell>{filing["filingRep"]}</Table.Cell>
+                <Table.Cell>{filing["efiled"]}</Table.Cell>
+        <Table.Cell>{filing["description"]}</Table.Cell>
+         <Table.Cell>
           <Icon name="ellipsis horizontal" onClick={() => this.handleClick(filingId)} />
             <Icon name="delete" onClick={() => this.openModal()} />
           <Modal open={this.state.modalOpen} size="tiny">
@@ -61,8 +56,8 @@ class FilingListItem extends Component {
               </Button>
             </Modal.Actions>
           </Modal>
-        </TableCell>
-      </TableRow>
+        </Table.Cell>
+      </Table.Row>
     );
   }
 }

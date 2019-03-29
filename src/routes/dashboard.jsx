@@ -26,7 +26,7 @@ const dashboardRoutes = [
     component: DashboardPage
   },
   {
-    path: "/table",
+    path: "/projects",
     sidebarName: "Projects",
     navbarName: "Projects",
     icon: "content_paste",
@@ -40,7 +40,7 @@ const dashboardRoutes = [
     component: Typography
   },
   {
-    path: "/icons",
+    path: "/filings",
     sidebarName: "Filings",
     navbarName: "Filings",
     icon: "ballot",

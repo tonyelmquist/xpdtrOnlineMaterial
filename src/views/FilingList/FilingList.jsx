@@ -4,13 +4,28 @@ import _ from "lodash";
 import FilingListItem from "./FilingListItem";
 import axios from "axios";
 import {
-  Table,
   Segment,
   Form,
   Button,
   Dimmer,
   Loader
 } from "semantic-ui-react";
+import CustomTable from "components/CustomTable/CustomTable.jsx";
+
+import withStyles from "@material-ui/core/styles/withStyles";
+// core components
+import GridItem from "components/Grid/GridItem.jsx";
+import GridContainer from "components/Grid/GridContainer.jsx";
+//import Table from "components/Table/Table.jsx";
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Card from "components/Card/Card.jsx";
+import CardHeader from "components/Card/CardHeader.jsx";
+import CardBody from "components/Card/CardBody.jsx";
+
 import { compose } from "redux";
 import {
   withFirebase,
@@ -18,6 +33,36 @@ import {
   isEmpty,
   firebaseConnect
 } from "react-redux-firebase";
+
+const styles = {
+  cardCategoryWhite: {
+    "&,& a,& a:hover,& a:focus": {
+      color: "rgba(255,255,255,.62)",
+      margin: "0",
+      fontSize: "14px",
+      marginTop: "0",
+      marginBottom: "0"
+    },
+    "& a,& a:hover,& a:focus": {
+      color: "#FFFFFF"
+    }
+  },
+  cardTitleWhite: {
+    color: "#FFFFFF",
+    marginTop: "0px",
+    minHeight: "auto",
+    fontWeight: "300",
+    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+    marginBottom: "3px",
+    textDecoration: "none",
+    "& small": {
+      color: "#777",
+      fontSize: "65%",
+      fontWeight: "400",
+      lineHeight: "1"
+    }
+  }
+};
 
 class FilingList extends Component {
   state = {
@@ -110,64 +155,64 @@ class FilingList extends Component {
     });
 
     return (
-      <Table.Row>
-        <Table.Cell>
+      <TableRow>
+        <TableCell>
           <Form.Input
             name="DOBNumber"
             fluid
             placeholder="DOB Job Number"
             onChange={this.handleInputChange}
           />
-        </Table.Cell>
-        <Table.Cell>
+        </TableCell>
+        <TableCell>
           <Form.Input
             name="project"
             fluid
             placeholder="Project"
             onChange={this.handleInputChange}
           />
-        </Table.Cell>
-        <Table.Cell>
+        </TableCell>
+        <TableCell>
           <Form.Input
             name="created"
             fluid
             placeholder="Created"
             onChange={this.handleInputChange}
           />
-        </Table.Cell>
-        <Table.Cell>
+        </TableCell>
+        <TableCell>
           <Form.Input
             name="applicant"
             fluid
             placeholder="Applicant"
             onChange={this.handleInputChange}
           />
-        </Table.Cell>
-        <Table.Cell>
+        </TableCell>
+        <TableCell>
           <Form.Input
             name="filingRep"
             fluid
             placeholder="Filing Representative"
             onChange={this.handleInputChange}
           />
-        </Table.Cell>
-        <Table.Cell>
+        </TableCell>
+        <TableCell>
           <Form.Checkbox
             name="efiled"
             fluid
             onChange={this.handleInputChange}
             value="efiled"
           />
-        </Table.Cell>
-        <Table.Cell>
+        </TableCell>
+        <TableCell>
           <Form.Input
             name="description"
             fluid
             placeholder="Description"
             onChange={this.handleInputChange}
           />
-        </Table.Cell>
-        <Table.Cell>
+        </TableCell>
+        <TableCell>
           <Button
             color="green"
             onClick={() => {
@@ -176,15 +221,86 @@ class FilingList extends Component {
           >
             Add Filing
           </Button>
-        </Table.Cell>
-      </Table.Row>
+        </TableCell>
+      </TableRow>
     );
   };
 
   render() {
-    const { filings } = this.props;
+    const { filings, classes } = this.props;
     return (
-      <div className="list-content">
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card plain>
+            <CardHeader color="primary">
+              <h4 className={classes.cardTitleWhite}>Simple Table</h4>
+              <p className={classes.cardCategoryWhite}>
+                Here is a subtitle for this table
+              </p>
+            </CardHeader>
+            <CardBody>
+            <Table stackable selectable className="list-content">
+            <TableHead>
+              <TableRow>
+                <TableCell>DOBNumber</TableCell>
+                <TableCell>Project</TableCell>
+                <TableCell>Created</TableCell>
+                <TableCell>Applicant</TableCell>
+                <TableCell>Filing Rep</TableCell>
+                <TableCell>E-filed</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {this.renderFilings()}
+              {this.state.addFormVisible ? this.addFilingRow() : null}
+            </TableBody>
+          </Table>
+            </CardBody>
+          </Card>
+        </GridItem>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card plain>
+            <CardHeader plain color="primary">
+              <h4 className={classes.cardTitleWhite}>
+                Table on Plain Background
+              </h4>
+              <p className={classes.cardCategoryWhite}>
+                Here is a subtitle for this table
+              </p>
+            </CardHeader>
+            <CardBody>
+              <CustomTable
+                tableHeaderColor="primary"
+                tableHead={["ID", "Name", "Country", "City", "Salary"]}
+                tableData={[
+                  ["1", "Dakota Rice", "$36,738", "Niger", "Oud-Turnhout"],
+                  ["2", "Minerva Hooper", "$23,789", "Curaçao", "Sinaai-Waas"],
+                  ["3", "Sage Rodriguez", "$56,142", "Netherlands", "Baileux"],
+                  [
+                    "4",
+                    "Philip Chaney",
+                    "$38,735",
+                    "Korea, South",
+                    "Overland Park"
+                  ],
+                  [
+                    "5",
+                    "Doris Greene",
+                    "$63,542",
+                    "Malawi",
+                    "Feldkirchen in Kärnten"
+                  ],
+                  ["6", "Mason Porter", "$78,615", "Chile", "Gloucester"]
+                ]}
+              />
+            </CardBody>
+          </Card>
+        </GridItem>
+      </GridContainer>
+
+      /*       <div className="list-content">
         {!isLoaded(filings) ? (
           <Dimmer active inverted>
             <Loader>Loading</Loader>
@@ -194,16 +310,16 @@ class FilingList extends Component {
         <Form>
           <Table stackable selectable className="list-content">
             <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>DOBNumber</Table.HeaderCell>
-                <Table.HeaderCell>Project</Table.HeaderCell>
-                <Table.HeaderCell>Created</Table.HeaderCell>
-                <Table.HeaderCell>Applicant</Table.HeaderCell>
-                <Table.HeaderCell>Filing Rep</Table.HeaderCell>
-                <Table.HeaderCell>E-filed</Table.HeaderCell>
-                <Table.HeaderCell>Description</Table.HeaderCell>
-                <Table.HeaderCell>Actions</Table.HeaderCell>
-              </Table.Row>
+              <TableRow>
+                <TableCell>DOBNumber</TableCell>
+                <TableCell>Project</TableCell>
+                <TableCell>Created</TableCell>
+                <TableCell>Applicant</TableCell>
+                <TableCell>Filing Rep</TableCell>
+                <TableCell>E-filed</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
             </Table.Header>
             <Table.Body>
               {this.renderFilings()}
@@ -218,7 +334,7 @@ class FilingList extends Component {
         >
           {this.state.addFormVisible ? "Cancel" : "New Filing"}
         </Button>
-      </div>
+      </div> */
     );
   }
 }
@@ -242,5 +358,5 @@ export default compose(
     filings: state.firebase.data.filings,
     projects: state.firebase.data.projects,
     contacts: state.firebase.data.contacts
-  }))
+  })),withStyles(styles)
 )(FilingList);

@@ -4,7 +4,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 // core components
 import GridItem from "components/Grid/GridItem.jsx";
 import GridContainer from "components/Grid/GridContainer.jsx";
-import Table from "components/Table/Table.jsx";
+import CustomTable from "components/CustomTable/CustomTable.jsx";
 import Card from "components/Card/Card.jsx";
 import CardHeader from "components/Card/CardHeader.jsx";
 import CardBody from "components/Card/CardBody.jsx";
@@ -52,7 +52,7 @@ function TableList(props) {
             </p>
           </CardHeader>
           <CardBody>
-            <Table
+            <CustomTable
               tableHeaderColor="primary"
               tableHead={["Name", "Country", "City", "Salary"]}
               tableData={[
@@ -78,7 +78,7 @@ function TableList(props) {
             </p>
           </CardHeader>
           <CardBody>
-            <Table
+            <CustomTable
               tableHeaderColor="primary"
               tableHead={["ID", "Name", "Country", "City", "Salary"]}
               tableData={[
