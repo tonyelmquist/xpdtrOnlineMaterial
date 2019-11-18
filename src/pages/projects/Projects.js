@@ -1,17 +1,20 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { useFirestoreConnect, isLoaded, isEmpty } from "react-redux-firebase";
-import MUIDataTable from "mui-datatables";
+import {
+  useFirestoreConnect,
+  isLoaded,
+  isEmpty,
+  useFirestore,
+} from "react-redux-firebase";
 
 // components
 import PageTitle from "../../components/PageTitle";
 import NewProject from "./NewProject";
 import { Grid } from "@material-ui/core";
 import firebase from "firebase";
-import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
+import SentimentDissatisfiedIcon from "@material-ui/icons/SentimentDissatisfied";
+import DataTable from '../../components/DataTable/DataTable';
 
-
-import { useFirestore } from 'react-redux-firebase'
 function Projects() {
   // Attach project listener
   const currentUser = firebase.auth().currentUser.uid;
@@ -22,22 +25,34 @@ function Projects() {
     where: ["userId", "==", currentUser],
   };
 
+  const contactQuery = {
+    collection: "contacts",
+    limitTo: 10,
+    where: ["userId", "==", currentUser],
+  };
+
   useFirestoreConnect(() => [projectQuery]);
+  useFirestoreConnect(() => [contactQuery]);
 
   const projects = useSelector(
     ({ firestore: { ordered } }) => ordered.projects,
   );
 
+  const contacts = useSelector(
+    ({ firestore: { ordered } }) => ordered.contacts,
+  );
+
   const firestore = useFirestore();
 
-  const deleteProjects = (data) => {
-    console.log(data.data)
+  const deleteProjects = data => {
+    console.log(data.data);
     data.data.forEach(element => {
-
-      firestore.collection('projects').doc(projects[element.index].id).delete();
-      
+      firestore
+        .collection("projects")
+        .doc(projects[element.index].id)
+        .delete();
     });
-  }
+  };
   // Show a message while todos are loading
   if (!isLoaded(projects)) {
     return "Loading";
@@ -47,14 +62,25 @@ function Projects() {
   if (isEmpty(projects)) {
     return (
       <>
-                    <PageTitle title="Projects" />
-      <Grid container spacing={4}>
-        <Grid item xs={12} style={{textAlign: 'center', fontSize: '2.5rem'}}>
-        <SentimentDissatisfiedIcon style={{width: '200px', height: '200px'}}/>
-          <p>Uh-oh! You don't have any projects yet...</p> <p> Click on the '+' button in the lower right-hand corner to add a project...</p>
+        <PageTitle title="Projects" />
+        <Grid container spacing={4}>
+          <Grid
+            item
+            xs={12}
+            style={{ textAlign: "center", fontSize: "2.5rem" }}
+          >
+            <SentimentDissatisfiedIcon
+              style={{ width: "200px", height: "200px" }}
+            />
+            <p>Uh-oh! You don't have any projects yet...</p>{" "}
+            <p>
+              {" "}
+              Click on the '+' button in the lower right-hand corner to add a
+              project...
+            </p>
+          </Grid>
         </Grid>
-      </Grid>
-        <NewProject user={currentUser} />
+        <NewProject user={currentUser} contacts={contacts} />
       </>
     );
   }
@@ -96,20 +122,21 @@ function Projects() {
 
   return (
     <>
-      <PageTitle title="Projects" />
       <Grid container spacing={4}>
         <Grid item xs={12}>
-          <MUIDataTable
-            data={projects}
-            columns={columns}
-            options={{
-              filterType: "checkbox",
-              onRowsDelete: deleteProjects
-            }}
-          />
+         
+            <DataTable
+              data={projects}
+              columns={columns}
+              options={{
+                filterType: "checkbox",
+                onRowsDelete: deleteProjects,
+              }}
+              title={"Projects"}
+            />
         </Grid>
       </Grid>
-      <NewProject user={currentUser} />
+      <NewProject user={currentUser} contacts={contacts} />
     </>
   );
 }

@@ -6,6 +6,18 @@ export default makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
   },
+  fab: {
+    margin: theme.spacing(1),
+  },
+  fabContainer: {
+    position: "fixed",
+    right: "0",
+    bottom: "0",
+    zIndex: "1000"
+  },
+  fabIcon: {
+    marginRight: "5px"
+  },
   visitsNumberContainer: {
     display: "flex",
     alignItems: "center",

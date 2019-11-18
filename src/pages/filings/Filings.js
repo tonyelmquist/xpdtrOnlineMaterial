@@ -1,7 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useFirestoreConnect, isLoaded, isEmpty } from "react-redux-firebase";
-import MUIDataTable from "mui-datatables";
 import PdfIcon from "@material-ui/icons/PictureAsPdf";
 
 // components
@@ -14,6 +13,7 @@ import SentimentDissatisfiedIcon from "@material-ui/icons/SentimentDissatisfied"
 import ViewPDF from "./ViewPDF";
 import { useFirestore } from "react-redux-firebase";
 import Button from "@material-ui/core/Button";
+import DataTable from '../../components/DataTable/DataTable';
 function Filings() {
   // Attach building listener
   const currentUser = firebase.auth().currentUser.uid;
@@ -62,6 +62,8 @@ function Filings() {
       .add({ ...values, content: content, userId: currentUser });
   };
 
+  
+
   const handleSetEditorOpen = () => {
     setEditorOpen(true);
   };
@@ -86,6 +88,7 @@ function Filings() {
   }
 
   const handleSetEditorClosed = () => {
+
     setEditorOpen(false);
   };
 
@@ -93,7 +96,6 @@ function Filings() {
   if (isEmpty(filings)) {
     return (
       <>
-        <PageTitle title="Filings" />
         <Grid container spacing={4}>
           <Grid
             item
@@ -111,7 +113,21 @@ function Filings() {
             </p>
           </Grid>
         </Grid>
-        <NewFiling user={currentUser} />
+        <NewFiling
+        user={currentUser}
+        handleChange={handleChange}
+        handleFormChange={handleFormChange}
+        handleSetEditorOpen={handleSetEditorOpen}
+        values={values}
+      />
+      <ViewPDF
+        editorOpen={editorOpen}
+        handleChange={handleChange}
+        handleSetEditorOpen={handleSetEditorOpen}
+        handleSetEditorClosed={handleSetEditorClosed}
+        values={values}
+        saveFiling={saveFiling}
+      />
       </>
     );
   }
@@ -195,16 +211,17 @@ function Filings() {
 
   return (
     <>
-      <PageTitle title="Filings" />
+      
       <Grid container spacing={4}>
         <Grid item xs={12}>
-          <MUIDataTable
+          <DataTable
             data={filings}
             columns={columns}
             options={{
               filterType: "checkbox",
               onRowsDelete: deleteFilings,
             }}
+            title={"Forms"}
           />
         </Grid>
       </Grid>

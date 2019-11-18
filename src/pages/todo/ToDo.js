@@ -2,12 +2,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useFirestoreConnect, isLoaded, isEmpty } from "react-redux-firebase";
 
-
 // components
-import PageTitle from "../../components/PageTitle";
-import EditIcon from '@material-ui/icons/Edit';
-import Button from '@material-ui/core/Button';
-import NewBuilding from "./NewBuilding";
+import NewContact from "./NewToDo";
 import { Grid } from "@material-ui/core";
 import firebase from "firebase";
 import SentimentDissatisfiedIcon from "@material-ui/icons/SentimentDissatisfied";
@@ -15,85 +11,65 @@ import SentimentDissatisfiedIcon from "@material-ui/icons/SentimentDissatisfied"
 import { useFirestore } from "react-redux-firebase";
 import DataTable from '../../components/DataTable/DataTable';
 
-function Buildings() {
-  // Attach building listener
+const ToDo = () => {
+  // Attach contact listener
   const currentUser = firebase.auth().currentUser.uid;
 
-  const buildingQuery = {
-    collection: "buildings",
+  const contactQuery = {
+    collection: "todos",
     limitTo: 10,
     where: ["userId", "==", currentUser],
   };
 
-  const openBuilding = (tableData) => {
-    console.log(tableData)
-  }
+  useFirestoreConnect(() => [contactQuery]);
 
-  useFirestoreConnect(() => [buildingQuery]);
-
-  const buildings = useSelector(
-    ({ firestore: { ordered } }) => ordered.buildings,
+  const contacts = useSelector(
+    ({ firestore: { ordered } }) => ordered.contacts,
   );
 
   const firestore = useFirestore();
 
-  const deletebuildings = data => {
+  const deletecontacts = data => {
     console.log(data.data);
     data.data.forEach(element => {
       firestore
-        .collection("buildings")
-        .doc(buildings[element.index].id)
+        .collection("contacts")
+        .doc(contacts[element.index].id)
         .delete();
     });
   };
   // Show a message while todos are loading
-  if (!isLoaded(buildings)) {
+  if (!isLoaded(contacts)) {
     return "Loading";
   }
 
   // Show a message if there are no todos
-  if (isEmpty(buildings)) {
+  if (isEmpty(contacts)) {
     return (
       <>
-        <PageTitle title="Buildings" />
         <Grid container spacing={4}>
           <Grid item xs></Grid>
           <Grid item xs={6} style={{ textAlign: "center", fontSize: "2.5rem" }}>
             <SentimentDissatisfiedIcon
               style={{ width: "200px", height: "200px" }}
             />
-            <p>Uh-oh! You don't have any buildings yet...</p>{" "}
+            <p>Uh-oh! You don't have any todos yet...</p>{" "}
             <p>
               {" "}
               Click on the '+' button in the lower right-hand corner to add a
-              building...
+              todo...
             </p>
           </Grid>
           <Grid item xs></Grid>
         </Grid>
-        <NewBuilding user={currentUser} />
+        <NewContact user={currentUser} />
       </>
     );
   }
 
   const columns = [
     {
-      name: "",
-      options: {
-        filter: false,
-        sort: false,
-        empty: true,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          return (
-            <Button onClick={() => openBuilding(tableMeta)}>
-              <EditIcon />
-            </Button>
-          );
-        },
-      },
-    },
-    {
-      name: "customerReference",
+      name: "fullName",
       label: "Name",
       options: {
         filter: true,
@@ -101,7 +77,15 @@ function Buildings() {
       },
     },
     {
-      name: "BIN",
+      name: "title",
+      label: "Title",
+      options: {
+        filter: true,
+        sort: true,
+      },
+    },
+    {
+      name: "businessName",
       label: "BIN",
       options: {
         filter: true,
@@ -109,40 +93,48 @@ function Buildings() {
       },
     },
     {
-      name: "houseNumber",
-      label: "House #",
+      name: "address1",
+      label: "Address",
       options: {
         filter: true,
         sort: true,
       },
     },
     {
-      name: "streetName",
-      label: "Street",
+      name: "licenseType",
+      label: "License Type",
       options: {
         filter: true,
         sort: true,
       },
     },
     {
-      name: "block",
-      label: "Block",
+      name: "licenseNumber",
+      label: "License Number",
       options: {
         filter: true,
         sort: true,
       },
     },
     {
-      name: "lot",
-      label: "Lot",
+      name: "phone",
+      label: "Phone",
       options: {
         filter: true,
         sort: true,
       },
     },
     {
-      name: "cb",
-      label: "CB",
+      name: "mobile",
+      label: "Mobile",
+      options: {
+        filter: true,
+        sort: true,
+      },
+    },
+    {
+      name: "email",
+      label: "Email",
       options: {
         filter: true,
         sort: true,
@@ -155,19 +147,19 @@ function Buildings() {
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <DataTable
-            data={buildings}
+            data={contacts}
             columns={columns}
             options={{
               filterType: "checkbox",
-              onRowsDelete: deletebuildings,
+              onRowsDelete: deletecontacts,
             }}
-            title={"Buildings"}
+            title={"Contacts"}
           />
         </Grid>
       </Grid>
-      <NewBuilding user={currentUser} />
+      <NewContact user={currentUser} />
     </>
   );
 }
 
-export default Buildings;
+export default ToDo;

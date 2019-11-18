@@ -24,6 +24,9 @@ import Charts from "../../pages/charts";
 import Projects from '../../pages/projects/Projects';
 import Filings from '../../pages/filings/Filings';
 import Buildings from '../../pages/buildings/Buildings';
+import Contacts from '../../pages/contacts/Contacts';
+import ToDo from '../../pages/todo/ToDo';
+import DOB from '../../pages/dob/DOB';
 
 // context
 import { useLayoutState } from "../../context/LayoutContext";
@@ -47,12 +50,14 @@ function Layout(props) {
           >
             <div className={classes.fakeToolbar} />
             <Switch>
-              <Route path="/app/dashboard" component={Dashboard} />
-              <Route path="/app/typography" component={Typography} />
+              <Route path="/app/home" component={Dashboard} />
               <Route path="/app/projects" component={Projects} />
               <Route path="/app/buildings" component={Buildings} />
-              <Route path="/app/filings" component={Filings} />
+              <Route path="/app/todo" component={ToDo} />
+              <Route path="/app/forms" component={Filings} />
+              <Route path="/app/contacts" component={Contacts} />
               <Route path="/app/notifications" component={Notifications} />
+              <Route path="/app/dob" component={DOB} />
               <Route
                 exact
                 path="/app/ui"

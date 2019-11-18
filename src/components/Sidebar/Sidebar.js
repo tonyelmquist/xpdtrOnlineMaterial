@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Drawer, IconButton, List } from "@material-ui/core";
 import {
-  Dashboard,
   FolderOpen,
-  People as PeopleIcon,
+  ContactPhone as PeopleIcon,
   LibraryBooks as FormsIcon,
+  Home as HomeIcon,
   QuestionAnswer as SupportIcon,
   Settings,
   ArrowBack as ArrowBackIcon,
   Business as BuildingIcon,
   PlaylistAddCheck as TaskIcon,
   LocationCity as DOB,
-  Help as HelpIcon
+  Help as HelpIcon,
+  Group as GroupIcon,
 } from "@material-ui/icons";
 import { useTheme } from "@material-ui/styles";
 import { withRouter } from "react-router-dom";
@@ -32,7 +33,7 @@ import {
 } from "../../context/LayoutContext";
 
 const structure = [
-  { id: 0, label: "Dashboard", link: "/app/dashboard", icon: <Dashboard /> },
+  { id: 0, label: "Home", link: "/app/home", icon: <HomeIcon /> },
   {
     id: 1,
     label: "Projects",
@@ -42,34 +43,35 @@ const structure = [
   { id: 2, label: "Buildings", link: "/app/buildings", icon: <BuildingIcon /> },
   {
     id: 3,
-    label: "Filings",
-    link: "/app/filings",
+    label: "Forms",
+    link: "/app/forms",
     icon: <FormsIcon />,
   },
   {
     id: 4,
-    label: "Tasks",
-    link: "/app/tasks",
+    label: "Todo",
+    link: "/app/todo",
     icon: <TaskIcon />,
   },
   {
     id: 5,
     label: "Contacts",
     link: "/app/contacts",
-    icon: <PeopleIcon />
+    icon: <PeopleIcon />,
   },
   {
     id: 6,
     label: "Dept of Buildings",
     link: "/app/dob",
-    icon: <DOB />
+    icon: <DOB />,
   },
-  { id: 7, type: "divider" },
-  { id: 8, label: "Settings", link: "/app/settings", icon: <Settings /> },
-  { id: 9, label: "Help", link: "/app/help", icon: <HelpIcon /> },
-  { id: 10, label: "Support", link: "/app/support", icon: <SupportIcon /> },
-  { id: 11, type: "divider" },
-  { id: 12, type: "title", label: "PROJECTS" },
+  { id: 7, icon: <GroupIcon />, label: "Groups" },
+  { id: 8, type: "divider" },
+  { id: 9, label: "Settings", link: "/app/settings", icon: <Settings /> },
+  { id: 10, label: "Help", link: "/app/help", icon: <HelpIcon /> },
+  { id: 11, label: "Support", link: "/app/support", icon: <SupportIcon /> },
+  { id: 12, type: "divider" },
+
   {
     id: 13,
     label: "My recent",

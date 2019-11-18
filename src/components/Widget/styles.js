@@ -6,11 +6,11 @@ export default makeStyles(theme => ({
     minHeight: "100%",
   },
   widgetHeader: {
-    padding: theme.spacing(3),
-    paddingBottom: theme.spacing(1),
+    padding: theme.spacing(2),
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+    backgroundColor: theme.palette.secondary.main
   },
   widgetRoot: {
     boxShadow: theme.customShadows.widget,

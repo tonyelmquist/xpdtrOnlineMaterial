@@ -19,7 +19,9 @@ import { createFirestoreInstance } from "redux-firestore";
 import configureStore from "./store";
 import { firebase as fbConfig, reduxFirebase as rfConfig } from "./config";
 
-import  StyledFirebaseAuth  from "react-firebaseui/StyledFirebaseAuth";
+import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
+
+import Login from "./pages/login/Login";
 
 const initialState = window && window.__INITIAL_STATE__; // set initial state here
 
@@ -32,25 +34,7 @@ class SignInScreen extends React.Component {
   state = {
     isSignedIn: false, // Local signed-in state.
   };
-
-  // Configure FirebaseUI.
-  uiConfig = {
-    // Popup signin flow rather than redirect flow.
-    signInFlow: "popup",
-    // We will display Google and Facebook as auth providers.
-    signInOptions: [
-      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-      firebase.auth.EmailAuthProvider.PROVIDER_ID,
-      firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-      firebase.auth.TwitterAuthProvider.PROVIDER_ID,
-    ],
-    callbacks: {
-      // Avoid redirects after sign-in.
-      signInSuccessWithAuthResult: () => false,
-    },
-  };
-
+ 
   // Listen to the Firebase Auth state and set the local state.
   componentDidMount() {
     this.unregisterAuthObserver = firebase
@@ -67,14 +51,20 @@ class SignInScreen extends React.Component {
     if (!this.state.isSignedIn) {
       return (
         <Provider store={store}>
-          <div>
-            <h1>XPDTR</h1>
-            <p>Please sign-in:</p>
-            <StyledFirebaseAuth
-              uiConfig={this.uiConfig}
-              firebaseAuth={firebase.auth()}
-            />
-          </div>
+          <ReactReduxFirebaseProvider
+            firebase={firebase}
+            config={rfConfig}
+            dispatch={store.dispatch}
+            createFirestoreInstance={createFirestoreInstance}
+          >
+            <LayoutProvider>
+              <UserProvider>
+                <ThemeProvider theme={Themes.default}>
+                  <Login firebase={firebase} />
+                </ThemeProvider>
+              </UserProvider>
+            </LayoutProvider>
+          </ReactReduxFirebaseProvider>
         </Provider>
       );
     }
@@ -90,7 +80,7 @@ class SignInScreen extends React.Component {
             <UserProvider>
               <ThemeProvider theme={Themes.default}>
                 <CssBaseline />
-                <App user={firebase.auth().currentUser}/>
+                <App user={firebase.auth().currentUser} />
               </ThemeProvider>
             </UserProvider>
           </LayoutProvider>

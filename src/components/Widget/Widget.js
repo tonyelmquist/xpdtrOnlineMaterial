@@ -35,7 +35,7 @@ export default function Widget({
             header
           ) : (
             <React.Fragment>
-              <Typography variant="h5" color="textSecondary">
+              <Typography variant="h5" >
                 {title}
               </Typography>
               {!disableWidgetMenu && (

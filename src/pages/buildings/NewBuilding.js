@@ -14,14 +14,17 @@ import Grid from "@material-ui/core/Grid";
 import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
 import { useFirestore } from "react-redux-firebase";
-
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: "relative",
+    backgroundColor: theme.palette.secondary.main,
+    color: theme.palette.primary.main,
   },
   title: {
     marginLeft: theme.spacing(2),
     flex: 1,
+    color: theme.palette.primary.main,
+    fontWeight: "bold",
   },
   fab: {
     margin: theme.spacing(2),
@@ -32,23 +35,30 @@ const useStyles = makeStyles(theme => ({
   container: {
     display: "flex",
     flexWrap: "wrap",
+    padding: "3rem",
+  },
+  paper: {
+    display: "flex",
+    flexWrap: "wrap",
   },
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    flex: '1 0 21%'
+    fontSize: "1.25rem",
   },
   bigField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    flex: '2 0 42%'
-  },
-  dense: {
-    marginTop: 19,
   },
   menu: {
     width: 200,
   },
+  formControl: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {},
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -99,7 +109,7 @@ export default function NewBuilding(props) {
         <AddIcon />
       </Fab>
       <Dialog
-        fullScreen
+        maxWidth={"xl"}
         open={open}
         onClose={handleClose}
         TransitionComponent={Transition}
@@ -114,7 +124,12 @@ export default function NewBuilding(props) {
             >
               <CloseIcon />
             </IconButton>
-            <Typography variant="h6" className={classes.title}>
+            <Typography
+              variant="h3"
+              size="sm"
+              weight="bold"
+              className={classes.title}
+            >
               New Building
             </Typography>
             <Button color="inherit" onClick={addProject}>
@@ -125,81 +140,74 @@ export default function NewBuilding(props) {
             </Button>
           </Toolbar>
         </AppBar>
-        <Grid container spacing={4}>
-          <Grid item xs></Grid>
-          <Grid item xs={6} style={{ textAlign: "center", fontSize: "2.5rem" }}>
-            <Paper>
-          <form className={classes.container} noValidate autoComplete="off">
-          <TextField
-            required
-            id="customerReference"
-            label="Name"
-            className={classes.textField}
-            value={values.customerReference}
-            onChange={handleChange("customerReference")}
-            margin="normal"
-            variant="outlined"
-          />
-          <TextField
-            id="BIN"
-            label="BIN"
-            className={classes.textField}
-            value={values.BIN}
-            onChange={handleChange("BIN")}
-            margin="normal"
-            variant="outlined"
-          />
-          <TextField
-            id="houseNumber"
-            label="House #"
-            className={classes.textField}
-            value={values.houseNumber}
-            onChange={handleChange("houseNumber")}
-            margin="normal"
-            variant="outlined"
-          />
-          <TextField
-            id="streetName"
-            label="Street"
-            className={classes.bigField}
-            value={values.streetName}
-            onChange={handleChange("streetName")}
-            margin="normal"
-            variant="outlined"
-          />
-          <TextField
-            id="block"
-            label="Block"
-            className={classes.textField}
-            value={values.block}
-            onChange={handleChange("block")}
-            margin="normal"
-            variant="outlined"
-          />
-          <TextField
-            id="lot"
-            label="Lot"
-            className={classes.textField}
-            value={values.lot}
-            onChange={handleChange("lot")}
-            margin="normal"
-            variant="outlined"
-          />
-          <TextField
-            id="cb"
-            label="CB"
-            className={classes.textField}
-            value={values.cb}
-            onChange={handleChange("cb")}
-            margin="normal"
-            variant="outlined"
-          />
-        </form>
-        </Paper>
-          </Grid>
-          <Grid item xs></Grid>
+        <Grid container spacing={3}>
+              <form className={classes.container} noValidate autoComplete="off">
+                <TextField
+                  required
+                  id="customerReference"
+                  label="Name"
+                  className={classes.textField}
+                  value={values.customerReference}
+                  onChange={handleChange("customerReference")}
+                  margin="normal"
+                  variant="outlined"
+                />
+                <TextField
+                  id="BIN"
+                  label="BIN"
+                  className={classes.textField}
+                  value={values.BIN}
+                  onChange={handleChange("BIN")}
+                  margin="normal"
+                  variant="outlined"
+                />
+                <TextField
+                  id="houseNumber"
+                  label="House #"
+                  className={classes.textField}
+                  value={values.houseNumber}
+                  onChange={handleChange("houseNumber")}
+                  margin="normal"
+                  variant="outlined"
+                />
+                <TextField
+                  id="streetName"
+                  label="Street"
+                  className={classes.bigField}
+                  value={values.streetName}
+                  onChange={handleChange("streetName")}
+                  margin="normal"
+                  variant="outlined"
+                />
+                <TextField
+                  id="block"
+                  label="Block"
+                  className={classes.textField}
+                  value={values.block}
+                  onChange={handleChange("block")}
+                  margin="normal"
+                  variant="outlined"
+                />
+                <TextField
+                  id="lot"
+                  label="Lot"
+                  className={classes.textField}
+                  value={values.lot}
+                  onChange={handleChange("lot")}
+                  margin="normal"
+                  variant="outlined"
+                />
+                <TextField
+                  id="cb"
+                  label="CB"
+                  className={classes.textField}
+                  value={values.cb}
+                  onChange={handleChange("cb")}
+                  margin="normal"
+                  variant="outlined"
+                />
+              </form>
         </Grid>
-       
       </Dialog>
     </div>
   );

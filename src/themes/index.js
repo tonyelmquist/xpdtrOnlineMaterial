@@ -17,11 +17,18 @@ const overrides = {
       fontSize: "1.5rem",
     },
     h5: {
-      fontSize: "1.285rem",
+      fontSize: "1.75rem",
+      fontFamily: "Helvetica",
+      fontWeight: "700",
+      color: "#002a76",
+      textTransform: "uppercase",
     },
     h6: {
       fontSize: "1.142rem",
     },
+  },
+  body: {
+    fontFamily: "Heebo, sans-serif",
   },
 };
 
