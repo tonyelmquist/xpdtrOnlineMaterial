@@ -50,9 +50,6 @@ export default class PSPDFKit extends Component {
     // Add the download button to the toolbar.
     items.push(downloadButton);
 
-
-    console.log(props.id)
-
     if (props.content) {
       this._instance = await PSPDFKitWeb.load({
         pdf: props.pdfUrl,
@@ -112,8 +109,9 @@ export default class PSPDFKit extends Component {
 
   saveTheThings = () => {
     this._instance.exportInstantJSON().then((instantJSON) => {
+      console.log(this.props.formId)
       const theContent = JSON.stringify(instantJSON);
-      this.props.saveFiling(theContent, this.props.id);
+      this.props.saveFiling(theContent, this.props.formId);
     });
   };
 

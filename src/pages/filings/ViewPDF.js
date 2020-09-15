@@ -55,8 +55,8 @@ const ViewPDF = (props) => {
     setSaveForm(value);
   }
 
-  const handleSaveFiling = (theThings) => {
-    props.saveFiling(theThings);
+  const handleSaveFiling = (content, id) => {
+    props.saveFiling(content, id);
     handleSetSaveForm(false);
   }
 
@@ -121,7 +121,7 @@ const ViewPDF = (props) => {
           content={props.values.content}
           setSaveForm={setSaveForm}
           saveForm={saveForm}
-          id={props.id}
+          formId={props.values.id}
         />
       </Dialog>
     </div>

@@ -62,7 +62,7 @@ function Filings() {
 
   const saveFiling = (content, id) => {
     const dateUpdated = Date.now();
-
+console.log(id)
     const { form, fileName } = values;
 
     if (!id) {
@@ -79,7 +79,7 @@ function Filings() {
         .then(function (docRef) {
           setValues({
             ...values,
-            id: docRef,
+            id: docRef.id,
             content,
             userId: currentUser,
           });
