@@ -1,17 +1,31 @@
-import React from "react";
+import React, { forwardRef, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
+import UIToolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
-import PSPDFKit from "./PSPDFKit";
+import {
+  PdfViewerComponent,
+  Toolbar,
+  Magnification,
+  Navigation,
+  LinkAnnotation,
+  BookmarkView,
+  ThumbnailView,
+  Print,
+  TextSelection,
+  Annotation,
+  TextSearch,
+  Inject,
+  FormFields,
+} from "@syncfusion/ej2-react-pdfviewer";
 import Fab from "@material-ui/core/Fab";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   appBar: {
     position: "relative",
     backgroundColor: theme.palette.secondary.main,
@@ -24,7 +38,7 @@ const useStyles = makeStyles(theme => ({
     position: "absolute",
     right: "0",
     bottom: "0",
-    zIndex: "1000"
+    zIndex: "1000",
   },
   container: {
     display: "flex",
@@ -44,25 +58,34 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Transition = React.forwardRef(function Transition(props, ref) {
+const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const ViewPDF = (props) => {
+  const childRef = useRef();
   const classes = useStyles();
-
-  const handleSetSaveForm = (value) => {
-    setSaveForm(value);
-  }
-
-  const handleSaveFiling = (theThings) => {
-    props.saveFiling(theThings);
-    handleSetSaveForm(false);
-  }
 
   const [saveForm, setSaveForm] = React.useState(false);
 
   const baseUrl = `${window.location.protocol}//${window.location.host}/${process.env.PUBLIC_URL}`;
+
+  const handleSave = () => {
+   // const annotations = childRef.current.exportAnnotationsAsObject();
+
+   const pdfViewer = childRef.current;
+   pdfViewer.updateFormFields();
+   const formFields = pdfViewer.retrieveFormFields();
+   console.log(formFields);
+  //  props.saveFiling(annotations, formFields, props.values.id);
+  };
+
+  const onDocumentLoaded = () => {
+    if (childRef.current) {
+      childRef.current.importAnnotations(props.values.annotations);
+      childRef.current.importFormFields(props.values.formFields);
+    }
+  };
 
   return (
     <div>
@@ -76,7 +99,7 @@ const ViewPDF = (props) => {
           <Fab
             color="primary"
             aria-label="save"
-            onClick={() => handleSetSaveForm(true)}
+            onClick={handleSave}
             className={classes.fab}
           >
             Save
@@ -91,7 +114,7 @@ const ViewPDF = (props) => {
           </Fab>
         </div>
         <AppBar className={classes.appBar}>
-          <Toolbar>
+          <UIToolbar>
             <IconButton
               edge="start"
               color="inherit"
@@ -111,21 +134,37 @@ const ViewPDF = (props) => {
             <Button color="inherit" onClick={props.handleSetEditorClosed}>
               cancel
             </Button>
-          </Toolbar>
+          </UIToolbar>
         </AppBar>
-        <PSPDFKit
-          pdfUrl={`/pdf/${props.values.fileName}`}
-          licenseKey={"YpgBt97lwxv2-9nOA7-d-N-R0TupwJLzyj7V9WoGosRQjrBIOo-mfU7OwWfa51xENWsrX0ePK3PqnNB8kBjRQs-KF5y9JOSr2FgVhrco-CsrM0smFxUQO9YbcAHqYRxToth08DwBjoiUSfPmzrPZqfGrVwacwbdrCAkAN5XzGYzcZbzj8myc3JHBmGRk29VqlFkzvNt1Q344wKnkRsqpz9QJE8kmImNAiVhiwHLMM0_F39dEdiU8nHFY_hTveeQFfsthDUg_DEV-BVbAljdalaHajYb7jKpwhEbmLYL996PG6ICS-o1VInFmyQcgVmrr9ktI5B3K4ozmS0djzInNWzJRrACwBB2RzVcOVO3RWLYCyKr3tvBq-vro5f-AnVA6mnQhYYZRqAhnZlUd6FUFw-CbyThMl89wzeUbSr6JD_0fnboVvgBiGosWf_UcDNxC"}
-          baseUrl={baseUrl}
-          saveFiling={handleSaveFiling}
-          content={props.values.content}
-          setSaveForm={setSaveForm}
-          saveForm={saveForm}
-          id={props.id}
-        />
+        <form id="pdfComponent">
+          <PdfViewerComponent
+            id="container"
+            documentPath={props.values.fileName}
+            serviceUrl="http://localhost5001/pdfviewer"
+            style={{ height: "100%" }}
+            documentLoad={onDocumentLoaded}
+            ref={childRef}
+          >
+            <Inject
+              services={[
+                Toolbar,
+                Magnification,
+                Navigation,
+                Annotation,
+                LinkAnnotation,
+                BookmarkView,
+                ThumbnailView,
+                Print,
+                TextSelection,
+                TextSearch,
+                FormFields,
+              ]}
+            />
+          </PdfViewerComponent>
+        </form>
       </Dialog>
     </div>
   );
-}
+};
 
 export default ViewPDF;

@@ -13,7 +13,7 @@ import SentimentDissatisfiedIcon from "@material-ui/icons/SentimentDissatisfied"
 import ViewPDF from "./ViewPDF";
 import { useFirestore } from "react-redux-firebase";
 import Button from "@material-ui/core/Button";
-import DataTable from '../../components/DataTable/DataTable';
+import DataTable from "../../components/DataTable/DataTable";
 function Filings() {
   // Attach building listener
   const currentUser = firebase.auth().currentUser.uid;
@@ -24,12 +24,15 @@ function Filings() {
     where: ["userId", "==", currentUser],
   };
 
+  
   const [values, setValues] = React.useState({
     fileName: "",
+    form: "",
     customerRef: "",
     content: "",
-    dateCreated: "",
-    dateUpdated: "",
+    dateCreated: null,
+    dateUpdated: null,
+    id: "",
   });
 
   const [editorOpen, setEditorOpen] = React.useState(false);
@@ -40,40 +43,73 @@ function Filings() {
 
   const firestore = useFirestore();
 
-  const deleteFilings = data => {
-    data.data.forEach(element => {
-      firestore
-        .collection("filings")
-        .doc(filings[element.index].id)
-        .delete();
+  const deleteFilings = (data) => {
+    data.data.forEach((element) => {
+      firestore.collection("filings").doc(filings[element.index].id).delete();
     });
   };
 
-  const openFiling = tableData => {
-    const {rowData} = tableData;
-    setValues({fileName: rowData[6], content: rowData[5], form: rowData[0]})
+  const openFiling = (tableData) => {
+    const { rowData } = tableData;
+    setValues({
+      fileName: rowData[6],
+      content: rowData[5],
+      form: rowData[0],
+      id: rowData[4],
+    });
     handleSetEditorOpen();
   };
 
-  const saveFiling = content => {
-    setValues({ ...values, content: content });
-    return firestore
-      .collection("filings")
-      .add({ ...values, content: content, userId: currentUser });
-  };
+  const saveFiling = (content, id) => {
+    const dateUpdated = Date.now();
 
-  
+    const { form, fileName } = values;
+
+    if (!id) {
+      firestore
+        .collection("filings")
+        .add({
+          content,
+          userId: currentUser,
+          dateCreated: dateUpdated,
+          dateUpdated: dateUpdated,
+          form: form,
+          fileName: fileName,
+        })
+        .then(function (docRef) {
+          setValues({
+            ...values,
+            id: docRef,
+            content,
+            userId: currentUser,
+          });
+        })
+        .catch(function (error) {
+          console.error("Error adding document: ", error);
+        });
+      return;
+    } else {
+      setValues({
+        ...values,
+        content,
+      });
+      firestore.collection("filings").doc(id).update({
+        content,
+        dateUpdated: dateUpdated,
+      });
+    }
+  };
 
   const handleSetEditorOpen = () => {
     setEditorOpen(true);
   };
 
-  const handleChange = name => event => {
+  const handleChange = (name) => (event) => {
     console.log(event.target);
     setValues({ ...values, [name]: event.target.value });
   };
 
-  const handleFormChange = event => {
+  const handleFormChange = (event) => {
     console.log(event.target.value);
     setValues({
       ...values,
@@ -88,7 +124,6 @@ function Filings() {
   }
 
   const handleSetEditorClosed = () => {
-
     setEditorOpen(false);
   };
 
@@ -114,20 +149,21 @@ function Filings() {
           </Grid>
         </Grid>
         <NewFiling
-        user={currentUser}
-        handleChange={handleChange}
-        handleFormChange={handleFormChange}
-        handleSetEditorOpen={handleSetEditorOpen}
-        values={values}
-      />
-      <ViewPDF
-        editorOpen={editorOpen}
-        handleChange={handleChange}
-        handleSetEditorOpen={handleSetEditorOpen}
-        handleSetEditorClosed={handleSetEditorClosed}
-        values={values}
-        saveFiling={saveFiling}
-      />
+          user={currentUser}
+          handleChange={handleChange}
+          handleFormChange={handleFormChange}
+          handleSetEditorOpen={handleSetEditorOpen}
+          values={values}
+        />
+        <ViewPDF
+          editorOpen={editorOpen}
+          handleChange={handleChange}
+          handleSetEditorOpen={handleSetEditorOpen}
+          handleSetEditorClosed={handleSetEditorClosed}
+          values={values}
+          saveFiling={saveFiling}
+          id
+        />
       </>
     );
   }
@@ -211,7 +247,6 @@ function Filings() {
 
   return (
     <>
-      
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <DataTable
