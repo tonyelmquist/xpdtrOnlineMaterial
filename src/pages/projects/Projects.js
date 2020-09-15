@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import {
   useFirestoreConnect,
@@ -13,11 +13,24 @@ import NewProject from "./NewProject";
 import { Grid } from "@material-ui/core";
 import firebase from "firebase";
 import SentimentDissatisfiedIcon from "@material-ui/icons/SentimentDissatisfied";
-import DataTable from '../../components/DataTable/DataTable';
+import DataTable from "../../components/DataTable/DataTable";
+
+import Fade from "@material-ui/core/Fade";
 
 function Projects() {
   // Attach project listener
   const currentUser = firebase.auth().currentUser.uid;
+
+  const buildingQuery = {
+    collection: "buildings",
+    limitTo: 10,
+    where: ["userId", "==", currentUser],
+  };
+
+  const [currentId, setCurrentId] = useState({
+    openId: "",
+    editOpen: false,
+  });
 
   const projectQuery = {
     collection: "projects",
@@ -33,6 +46,7 @@ function Projects() {
 
   useFirestoreConnect(() => [projectQuery]);
   useFirestoreConnect(() => [contactQuery]);
+  useFirestoreConnect(() => [buildingQuery]);
 
   const projects = useSelector(
     ({ firestore: { ordered } }) => ordered.projects,
@@ -42,15 +56,16 @@ function Projects() {
     ({ firestore: { ordered } }) => ordered.contacts,
   );
 
+  const buildings = useSelector(
+    ({ firestore: { ordered } }) => ordered.buildings,
+  );
+
   const firestore = useFirestore();
 
-  const deleteProjects = data => {
+  const deleteProjects = (data) => {
     console.log(data.data);
-    data.data.forEach(element => {
-      firestore
-        .collection("projects")
-        .doc(projects[element.index].id)
-        .delete();
+    data.data.forEach((element) => {
+      firestore.collection("projects").doc(projects[element.index].id).delete();
     });
   };
   // Show a message while todos are loading
@@ -61,27 +76,29 @@ function Projects() {
   // Show a message if there are no todos
   if (isEmpty(projects)) {
     return (
-      <>
-        <PageTitle title="Projects" />
-        <Grid container spacing={4}>
-          <Grid
-            item
-            xs={12}
-            style={{ textAlign: "center", fontSize: "2.5rem" }}
-          >
-            <SentimentDissatisfiedIcon
-              style={{ width: "200px", height: "200px" }}
-            />
-            <p>Uh-oh! You don't have any projects yet...</p>{" "}
-            <p>
-              {" "}
-              Click on the '+' button in the lower right-hand corner to add a
-              project...
-            </p>
+      <Fade in>
+        <>
+          <PageTitle title="Projects" />
+          <Grid container spacing={4}>
+            <Grid
+              item
+              xs={12}
+              style={{ textAlign: "center", fontSize: "2.5rem" }}
+            >
+              <SentimentDissatisfiedIcon
+                style={{ width: "200px", height: "200px" }}
+              />
+              <p>Uh-oh! You don't have any projects yet...</p>{" "}
+              <p>
+                {" "}
+                Click on the '+' button in the lower right-hand corner to add a
+                project...
+              </p>
+            </Grid>
           </Grid>
-        </Grid>
-        <NewProject user={currentUser} contacts={contacts} />
-      </>
+          <NewProject user={currentUser} contacts={contacts} />
+        </>
+      </Fade>
     );
   }
 
@@ -95,7 +112,7 @@ function Projects() {
       },
     },
     {
-      name: "building",
+      name: "building.buildingName",
       label: "Building",
       options: {
         filter: true,
@@ -122,9 +139,9 @@ function Projects() {
 
   return (
     <>
-      <Grid container spacing={4}>
-        <Grid item xs={12}>
-         
+      <Fade in={true}>
+        <Grid container spacing={4}>
+          <Grid item xs={12}>
             <DataTable
               data={projects}
               columns={columns}
@@ -134,9 +151,14 @@ function Projects() {
               }}
               title={"Projects"}
             />
+          </Grid>
         </Grid>
-      </Grid>
-      <NewProject user={currentUser} contacts={contacts} />
+      </Fade>
+      <NewProject
+        user={currentUser}
+        contacts={contacts}
+        buildings={buildings}
+      />
     </>
   );
 }
