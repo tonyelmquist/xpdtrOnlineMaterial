@@ -1,0 +1,26 @@
+.boardContainer {
+  background-color: #4bbf6b;
+}
+
+section.react-trello-lane {
+  background-color: #f89d07;
+}
+
+section.react-trello-lane header {
+  color: #002977;
+  font-family: Helvetica;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+section.react-trello-lane header textarea {
+  color: #002977;
+  font-size: 1.75rem;
+  font-family: Helvetica;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+section.react-trello-lane div {
+    width: 100%;
+}

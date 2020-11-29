@@ -1268,7 +1268,7 @@ export const tables: Table[] = [
     ],
   },
   {
-    title: "Job Applications DOB Now!",
+    title: "Violations",
     url: "",
     chartType: "",
     columns: [
@@ -1427,10 +1427,727 @@ export const tables: Table[] = [
           display: true,
         },
       },
-
       {
         name: "violation_type",
         label: "Violation type",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+    ],
+  },
+  {
+    title: "Violations",
+    url: "",
+    chartType: "",
+    columns: [
+      {
+        name: "isn_dob_bis_viol",
+        label: "Violation number",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        name: "boro",
+        label: "Borough",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        name: "bin",
+        label: "BIN",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        name: "block",
+        label: "Block",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        name: "lot",
+        label: "Lot",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        name: "issue_date",
+        label: "Issued",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        name: "violation_type_code",
+        label: "Violation type code",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+
+      {
+        name: "violation_number",
+        label: "Violation number",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        name: "house_number",
+        label: "House number",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        name: "street",
+        label: "Street",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        name: "disposition_date",
+        label: "Disposition date",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        name: "disposition_comments",
+        label: "Disposition comments",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        name: "device_number",
+        label: "Device number",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        name: "description",
+        label: "Description",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        name: "ecb_number",
+        label: "ECB Number",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        name: "number",
+        label: "Number",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+
+      {
+        name: "violation_category",
+        label: "Violation category",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        name: "violation_type",
+        label: "Violation type",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+    ],
+  },
+  {
+    title: "Permits",
+    url: "",
+    chartType: "",
+    columns: [
+      {
+        label: "BOROUGH",
+        name: "borough",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Bin #",
+        name: "bin__",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "House #",
+        name: "house__",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Street Name",
+        name: "street_name",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Job #",
+        name: "job__",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Job doc. #",
+        name: "job_doc___",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Job Type",
+        name: "job_type",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Self_Cert",
+        name: "self_cert",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Block",
+        name: "block",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Lot",
+        name: "lot",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Community Board",
+        name: "community_board",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Zip Code",
+        name: "zip_code",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Bldg Type",
+        name: "bldg_type",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Residential",
+        name: "residential",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Special District 1",
+        name: "special_district_1",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Special District 2",
+        name: "special_district_2",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Work Type",
+        name: "work_type",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Permit Status",
+        name: "permit_status",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Filing Status",
+        name: "filing_status",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Permit Type",
+        name: "permit_type",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Permit Sequence #",
+        name: "permit_sequence__",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Permit Subtype",
+        name: "permit_subtype",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Oil Gas",
+        name: "oil_gas",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Site Fill",
+        name: "site_fill",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Filing Date",
+        name: "filing_date",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Issuance Date",
+        name: "issuance_date",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Expiration Date",
+        name: "expiration_date",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Job Start Date",
+        name: "job_start_date",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Permittee's First Name",
+        name: "permittee_s_first_name",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Permittee's Last Name",
+        name: "permittee_s_last_name",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Permittee's Business Name",
+        name: "permittee_s_business_name",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Permittee's Phone #",
+        name: "permittee_s_phone__",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Permittee's License Type",
+        name: "permittee_s_license_type",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Permittee's License #",
+        name: "permittee_s_license__",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Act as Superintendent",
+        name: "act_as_superintendent",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Permittee's Other Title",
+        name: "permittee_s_other_title",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "HIC License",
+        name: "hic_license",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Site Safety Mgr's First Name",
+        name: "site_safety_mgr_s_first_name",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Site Safety Mgr's Last Name",
+        name: "site_safety_mgr_s_last_name",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Site Safety Mgr Business Name",
+        name: "site_safety_mgr_business_name",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Superintendent First & Last Name",
+        name: "superintendent_first___last_name",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Superintendent Business Name",
+        name: "superintendent_business_name",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Owner's Business Type",
+        name: "owner_s_business_type",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Non-Profit",
+        name: "non_profit",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Owner's Business Name",
+        name: "owner_s_business_name",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Owner's First Name",
+        name: "owner_s_first_name",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Owner's Last Name",
+        name: "owner_s_last_name",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Owner's House #",
+        name: "owner_s_house__",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Owner's House Street Name",
+        name: "owner_s_house_street_name",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Owner’s House City",
+        name: "city",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Owner’s House State",
+        name: "state",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Owner’s House Zip Code",
+        name: "owner_s_zip_code",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "Owner's Phone #",
+        name: "owner_s_phone__",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "DOBRunDate",
+        name: "dobrundate",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "PERMIT_SI_NO",
+        name: "permit_si_no",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "LATITUDE",
+        name: "gis_latitude",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "LONGITUDE",
+        name: "gis_longitude",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "COUNCIL_DISTRICT",
+        name: "gis_council_district",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "CENSUS_TRACT",
+        name: "gis_census_tract",
+        options: {
+          filter: true,
+          sort: true,
+          display: true,
+        },
+      },
+      {
+        label: "NTA_NAME",
+        name: "gis_nta_name",
         options: {
           filter: true,
           sort: true,

@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/styles";
 
-export default makeStyles(theme => ({
+export default makeStyles((theme) => ({
   card: {
     minHeight: "100%",
     display: "flex",
@@ -13,10 +13,10 @@ export default makeStyles(theme => ({
     position: "fixed",
     right: "0",
     bottom: "0",
-    zIndex: "1000"
+    zIndex: "1000",
   },
   fabIcon: {
-    marginRight: "5px"
+    marginRight: "5px",
   },
   visitsNumberContainer: {
     display: "flex",
@@ -123,5 +123,14 @@ export default makeStyles(theme => ({
   mainChartLegentElement: {
     fontSize: "18px !important",
     marginLeft: theme.spacing(1),
+  },
+  closeButton: {
+    position: "absolute",
+    right: "5px",
+    top: "8px",
+    zIndex: 9999,
+  },
+  popupToolbar: {
+    marginRight: "20px",
   },
 }));

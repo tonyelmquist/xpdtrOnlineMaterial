@@ -7,6 +7,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { MoreVert as MoreIcon } from "@material-ui/icons";
+import { GridOn } from "@material-ui/icons";
 import classnames from "classnames";
 
 // styles
@@ -19,6 +20,9 @@ export default function Widget({
   bodyClass,
   disableWidgetMenu,
   header,
+  showTable,
+  tableNumber,
+  data,
   ...props
 }) {
   var classes = useStyles();
@@ -35,19 +39,19 @@ export default function Widget({
             header
           ) : (
             <React.Fragment>
-              <Typography variant="h5" >
-                {title}
-              </Typography>
+              <Typography variant="h5">{title}</Typography>
               {!disableWidgetMenu && (
                 <IconButton
                   color="primary"
-                  classes={{ root: classes.moreButton }}
+                  classes={{ root: classes.tableButton }}
                   aria-owns="widget-menu"
                   aria-haspopup="true"
-                  onClick={() => setMoreMenuOpen(true)}
+                  onClick={() => {
+                    showTable(tableNumber, data);
+                  }}
                   buttonRef={setMoreButtonRef}
                 >
-                  <MoreIcon />
+                  <GridOn />
                 </IconButton>
               )}
             </React.Fragment>
@@ -62,26 +66,6 @@ export default function Widget({
           {children}
         </div>
       </Paper>
-      <Menu
-        id="widget-menu"
-        open={isMoreMenuOpen}
-        anchorEl={moreButtonRef}
-        onClose={() => setMoreMenuOpen(false)}
-        disableAutoFocusItem
-      >
-        <MenuItem>
-          <Typography>Edit</Typography>
-        </MenuItem>
-        <MenuItem>
-          <Typography>Copy</Typography>
-        </MenuItem>
-        <MenuItem>
-          <Typography>Delete</Typography>
-        </MenuItem>
-        <MenuItem>
-          <Typography>Print</Typography>
-        </MenuItem>
-      </Menu>
     </div>
   );
 }

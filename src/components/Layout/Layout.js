@@ -15,7 +15,7 @@ import Header from "../Header";
 import Sidebar from "../Sidebar";
 
 // pages
-import Dashboard from "../../pages/dashboard";
+
 import Typography from "../../pages/typography";
 import Notifications from "../../pages/notifications";
 import Maps from "../../pages/maps";
@@ -30,6 +30,7 @@ import DOB from '../../pages/dob/DOB';
 
 // context
 import { useLayoutState } from "../../context/LayoutContext";
+import DashboardProvider from '../../pages/dashboard/DashboardProvider';
 
 
 function Layout(props) {
@@ -40,35 +41,35 @@ function Layout(props) {
 
   return (
     <div className={classes.root}>
-        <>
-          <Header history={props.history} />
-          <Sidebar />
-          <div
-            className={classnames(classes.content, {
-              [classes.contentShift]: layoutState.isSidebarOpened,
-            })}
-          >
-            <div className={classes.fakeToolbar} />
-            <Switch>
-              <Route path="/app/home" component={Dashboard} />
-              <Route path="/app/projects" component={Projects} />
-              <Route path="/app/buildings" component={Buildings} />
-              <Route path="/app/todo" component={ToDo} />
-              <Route path="/app/forms" component={Filings} />
-              <Route path="/app/contacts" component={Contacts} />
-              <Route path="/app/notifications" component={Notifications} />
-              <Route path="/app/dob" component={DOB} />
-              <Route
-                exact
-                path="/app/ui"
-                render={() => <Redirect to="/app/ui/icons" />}
-              />
-              <Route path="/app/ui/maps" component={Maps} />
-              <Route path="/app/ui/icons" component={Icons} />
-              <Route path="/app/ui/charts" component={Charts} />
-            </Switch>
-          </div>
-        </>
+      <>
+        <Header history={props.history} />
+        <Sidebar />
+        <div
+          className={classnames(classes.content, {
+            [classes.contentShift]: layoutState.isSidebarOpened,
+          })}
+        >
+          <div className={classes.fakeToolbar} />
+          <Switch>
+            <Route path="/app/home" component={DashboardProvider} />
+            <Route path="/app/projects" component={Projects} />
+            <Route path="/app/buildings" component={Buildings} />
+            <Route path="/app/todo" component={ToDo} />
+            <Route path="/app/forms" component={Filings} />
+            <Route path="/app/contacts" component={Contacts} />
+            <Route path="/app/notifications" component={Notifications} />
+            <Route path="/app/dob" component={DOB} />
+            <Route
+              exact
+              path="/app/ui"
+              render={() => <Redirect to="/app/ui/icons" />}
+            />
+            <Route path="/app/ui/maps" component={Maps} />
+            <Route path="/app/ui/icons" component={Icons} />
+            <Route path="/app/ui/charts" component={Charts} />
+          </Switch>
+        </div>
+      </>
     </div>
   );
 }

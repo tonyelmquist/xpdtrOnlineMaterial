@@ -18,7 +18,7 @@ const getMuiTheme = () =>
           backgroundColor: "#FFF",
         },
       },
-      MUIDataTableToolbar:{
+      MUIDataTableToolbar: {
         root: {
           backgroundColor: "#f89d07",
         },
@@ -28,10 +28,12 @@ const getMuiTheme = () =>
           fontFamily: "Helvetica",
           fontSize: "1.75rem",
           fontWeight: "700",
-          textTransform: "uppercase"
+          textTransform: "uppercase",
         },
-
-      }
+        actions: {
+          marginRight: "20px"
+        }
+      },
     },
   });
 

@@ -1,17 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useFirestoreConnect, isLoaded, isEmpty } from "react-redux-firebase";
 import MUIDataTable from "mui-datatables";
 
 // components
 import PageTitle from "../../components/PageTitle/PageTitle";
+import EditIcon from "@material-ui/icons/Edit";
+import Button from "@material-ui/core/Button";
 import NewContact from "./NewContact";
+import EditContact from "./EditContact";
 import { Grid } from "@material-ui/core";
 import firebase from "firebase";
 import SentimentDissatisfiedIcon from "@material-ui/icons/SentimentDissatisfied";
+import Fade from "@material-ui/core/Fade";
 
 import { useFirestore } from "react-redux-firebase";
-import DataTable from '../../components/DataTable/DataTable';
+import DataTable from "../../components/DataTable/DataTable";
+import { FormatListBulleted } from "@material-ui/icons";
 
 function Contacts() {
   // Attach contact listener
@@ -19,8 +24,20 @@ function Contacts() {
 
   const contactQuery = {
     collection: "contacts",
-    limitTo: 1000,
     where: ["userId", "==", currentUser],
+  };
+
+  const [currentId, setCurrentId] = useState({
+    openId: "",
+    editOpen: false,
+  });
+
+  const openContact = (tableData) => {
+    setCurrentId({ openId: tableData.rowData[9], editOpen: true });
+  };
+
+  const closeContact = () => {
+    setCurrentId({ ...currentId, editOpen: false });
   };
 
   useFirestoreConnect(() => [contactQuery]);
@@ -31,14 +48,11 @@ function Contacts() {
 
   const firestore = useFirestore();
 
-  const deletecontacts = data => {
-    console.log("DELETING")
+  const deletecontacts = (data) => {
+    console.log("DELETING");
     console.log(data.data);
-    data.data.forEach(element => {
-      firestore
-        .collection("contacts")
-        .doc(contacts[element.index].id)
-        .delete();
+    data.data.forEach((element) => {
+      firestore.collection("contacts").doc(contacts[element.index].id).delete();
     });
   };
   // Show a message while todos are loading
@@ -144,21 +158,47 @@ function Contacts() {
         sort: true,
       },
     },
+    {
+      name: "id",
+      label: " ",
+      options: {
+        filter: false,
+        sort: false,
+        empty: true,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <Button onClick={() => openContact(tableMeta)}>
+              <EditIcon />
+            </Button>
+          );
+        },
+      },
+    },
   ];
 
   return (
     <>
-      <Grid container spacing={4}>
-        <Grid item xs={12}>
-          <DataTable
-            data={contacts}
-            columns={columns}
-            onRowsDelete={deletecontacts}
-            title={"Contacts"}
-          />
+      <Fade in>
+        <Grid container spacing={4}>
+          <Grid item xs={12}>
+            <DataTable
+              data={contacts}
+              columns={columns}
+              onRowsDelete={deletecontacts}
+              title={"Contacts"}
+            />
+          </Grid>
         </Grid>
-      </Grid>
+      </Fade>
       <NewContact user={currentUser} />
+      {currentId.editOpen ? (
+        <EditContact
+          user={currentUser}
+          id={currentId.openId}
+          open={currentId.editOpen}
+          onClose={closeContact}
+        />
+      ) : null}
     </>
   );
 }

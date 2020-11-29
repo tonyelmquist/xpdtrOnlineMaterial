@@ -34,26 +34,7 @@ const Tables = (props) => {
     >
       <Grid container spacing={4}>
         <Grid item xs={12}>
-          <AppBar className={classes.appBar}>
-            <Toolbar>
-              <IconButton
-                edge="start"
-                color="inherit"
-                onClick={hideTable}
-                aria-label="close"
-              >
-                <CloseIcon />
-              </IconButton>
-              <Typography
-                variant="h3"
-                size="sm"
-                weight="bold"
-                className={classes.title}
-              >
-                JOB APPLICATIONS - BIS
-              </Typography>
-            </Toolbar>
-          </AppBar>
+         
           <IconButton
             edge="start"
             color="inherit"

@@ -1,7 +1,7 @@
 
 import * as React from "react";
 
-import columns from "./columnDefinitions";
+import {tables} from "./tableDefinitions";
 import DataTable from "../../components/DataTable/DataTable";
 
 type MyProps = {
@@ -17,7 +17,7 @@ export default class PopupTable extends React.Component<MyProps> {
     return (
       <DataTable
         data={this.props.table.data}
-        columns={columns}
+        columns={tables[this.props.table.tableToShow].columns}
         title={"Job Applications"}
       />
     );
