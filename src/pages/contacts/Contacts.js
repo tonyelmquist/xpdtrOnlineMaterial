@@ -13,10 +13,11 @@ import { Grid } from "@material-ui/core";
 import firebase from "firebase";
 import SentimentDissatisfiedIcon from "@material-ui/icons/SentimentDissatisfied";
 import Fade from "@material-ui/core/Fade";
+import ConfirmDialog from "../../components/ConfirmDialog";
 
 import { useFirestore } from "react-redux-firebase";
 import DataTable from "../../components/DataTable/DataTable";
-import { FormatListBulleted } from "@material-ui/icons";
+
 
 function Contacts() {
   // Attach contact listener
@@ -32,8 +33,11 @@ function Contacts() {
     editOpen: false,
   });
 
-  const openContact = (tableData) => {
-    setCurrentId({ openId: tableData.rowData[9], editOpen: true });
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [dataToDelete, setDataToDelete] = useState(null);
+
+  const openContact = (id) => {
+    setCurrentId({ openId: id, editOpen: true });
   };
 
   const closeContact = () => {
@@ -48,10 +52,14 @@ function Contacts() {
 
   const firestore = useFirestore();
 
-  const deletecontacts = (data) => {
-    console.log("DELETING");
-    console.log(data.data);
-    data.data.forEach((element) => {
+  const handleDeleteContact = (data) => {
+    setDataToDelete(data.data);
+    setConfirmOpen(true)
+  }
+
+
+  const deletecontacts = () => {
+    dataToDelete.forEach((element) => {
       firestore.collection("contacts").doc(contacts[element.index].id).delete();
     });
   };
@@ -167,7 +175,7 @@ function Contacts() {
         empty: true,
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
-            <Button onClick={() => openContact(tableMeta)}>
+            <Button onClick={() => openContact(value)}>
               <EditIcon />
             </Button>
           );
@@ -184,7 +192,7 @@ function Contacts() {
             <DataTable
               data={contacts}
               columns={columns}
-              onRowsDelete={deletecontacts}
+              onRowsDelete={handleDeleteContact}
               title={"Contacts"}
             />
           </Grid>
@@ -199,6 +207,14 @@ function Contacts() {
           onClose={closeContact}
         />
       ) : null}
+      <ConfirmDialog
+        title="Delete Contact(s)?"
+        open={confirmOpen}
+        setOpen={setConfirmOpen}
+        onConfirm={deletecontacts}
+      >
+        Are you sure? This action cannot be undone.
+      </ConfirmDialog>
     </>
   );
 }

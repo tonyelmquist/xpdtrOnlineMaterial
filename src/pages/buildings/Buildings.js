@@ -1,13 +1,15 @@
-import React from "react";
+import React, {useState} from "react";
 import { useSelector } from "react-redux";
 import { useFirestoreConnect, isLoaded, isEmpty } from "react-redux-firebase";
 
 
 // components
 import PageTitle from "../../components/PageTitle";
+import ConfirmDialog from "../../components/ConfirmDialog";
 import EditIcon from '@material-ui/icons/Edit';
 import Button from '@material-ui/core/Button';
 import NewBuilding from "./NewBuilding";
+import EditBuilding from "./EditBuilding";
 import { Grid } from "@material-ui/core";
 import firebase from "firebase";
 import SentimentDissatisfiedIcon from "@material-ui/icons/SentimentDissatisfied";
@@ -25,9 +27,22 @@ function Buildings() {
     where: ["userId", "==", currentUser],
   };
 
-  const openBuilding = (tableData) => {
-    console.log(tableData)
-  }
+  const [currentId, setCurrentId] = useState({
+    openId: "",
+    editOpen: false,
+  });
+
+    const openBuilding = (id) => {
+      setCurrentId({ openId: id, editOpen: true });
+    };
+
+      const closeBuilding = () => {
+        setCurrentId({ ...currentId, editOpen: false });
+      };
+
+
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [dataToDelete, setDataToDelete] = useState(null);
 
   useFirestoreConnect(() => [buildingQuery]);
 
@@ -37,9 +52,13 @@ function Buildings() {
 
   const firestore = useFirestore();
 
-  const deletebuildings = data => {
-    console.log(data.data);
-    data.data.forEach(element => {
+  const handleDeleteBuilding = (data) => {
+    setDataToDelete(data.data);
+    setConfirmOpen(true);
+  };
+
+  const deletebuildings = () => {
+    dataToDelete.forEach((element) => {
       firestore
         .collection("buildings")
         .doc(buildings[element.index].id)
@@ -77,21 +96,6 @@ function Buildings() {
   }
 
   const columns = [
-    {
-      name: "",
-      options: {
-        filter: false,
-        sort: false,
-        empty: true,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          return (
-            <Button onClick={() => openBuilding(tableMeta)}>
-              <EditIcon />
-            </Button>
-          );
-        },
-      },
-    },
     {
       name: "customerReference",
       label: "Name",
@@ -148,6 +152,22 @@ function Buildings() {
         sort: true,
       },
     },
+    {
+      name: "id",
+      label: " ",
+      options: {
+        filter: false,
+        sort: false,
+        empty: true,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <Button onClick={() => openBuilding(value)}>
+              <EditIcon />
+            </Button>
+          );
+        },
+      },
+    },
   ];
 
   return (
@@ -159,13 +179,29 @@ function Buildings() {
             columns={columns}
             options={{
               filterType: "checkbox",
-              onRowsDelete: deletebuildings,
             }}
+            onRowsDelete={handleDeleteBuilding}
             title={"Buildings"}
           />
         </Grid>
       </Grid>
       <NewBuilding user={currentUser} />
+      {currentId.editOpen ? (
+        <EditBuilding
+          user={currentUser}
+          id={currentId.openId}
+          open={currentId.editOpen}
+          onClose={closeBuilding}
+        />
+      ) : null}
+      <ConfirmDialog
+        title="Delete Building(s)?"
+        open={confirmOpen}
+        setOpen={setConfirmOpen}
+        onConfirm={deletebuildings}
+      >
+        Are you sure? This action cannot be undone.
+      </ConfirmDialog>
     </>
   );
 }

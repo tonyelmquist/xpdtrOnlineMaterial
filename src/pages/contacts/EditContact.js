@@ -72,7 +72,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const EditContact = (props) => {
   const classes = useStyles();
 
-  const [open, setOpen] = React.useState(false);
 
   const firestore = useFirestore();
 

@@ -1,18 +1,15 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useFirestoreConnect, isLoaded, isEmpty } from "react-redux-firebase";
+import Card from "./Card"
 
 import firebase from "firebase";
 
-
 import { useFirestore } from "react-redux-firebase";
 
-
-import Board from "react-trello";
+import Board from "@lourenci/react-kanban";
+import "@lourenci/react-kanban/dist/styles.css";
 import "./board.css";
-import { Card as myCard} from './Card';
-
-import { AddCard } from './AddCard';
 
 const ToDo = () => {
   // Attach contact listener
@@ -48,87 +45,73 @@ const ToDo = () => {
   );
 
   useFirestoreConnect(() => [todoQuery]);
-  const data = {
-    lanes: [
+  
+
+  const todos = useSelector(({ firestore: { ordered } }) => ordered.todos);
+
+  const firestore = useFirestore();
+
+  const handleDataChange = (newData) => {
+    console.log("data changed");
+    console.log(newData);
+  };
+
+  const board = {
+    columns: [
       {
-        id: "lane1",
-        title: "Planned Tasks",
-        label: "2/2",
+        id: 1,
+        title: "Backlog",
         cards: [
           {
-            id: "Card1",
-            title: "Write Blog",
-            description: "Can AI make memes",
-            label: "30 mins",
-            draggable: false,
-          },
-          {
-            id: "Card2",
-            title: "Pay Rent",
-            description: "Transfer via NEFT",
-            label: "5 mins",
-            metadata: { sha: "be312a1" },
+            id: 1,
+            assignedTo: "Suzie",
+            title: "Add card",
+            description: "Add capability to add a card in a column",
+            dueDate: "12-10-2021",
+            project: "Project One",
           },
         ],
       },
       {
-        id: "lane2",
-        title: "Completed",
-        label: "0/0",
-        cards: [],
+        id: 2,
+        title: "Doing",
+        cards: [
+          {
+            id: 2,
+            assignedTo: "Fred",
+            title: "Drag-n-drop support",
+            description: "Move a card between the columns",
+            dueDate: "12-10-2021",
+            project: "Project Two",
+          },
+        ],
       },
     ],
   };
 
-  const todos = useSelector(
-    ({ firestore: { ordered } }) => ordered.todos,
-  );
-
-  const firestore = useFirestore();
-
-  const deletecontacts = (data) => {
-    console.log(data.data);
-    data.data.forEach((element) => {
-      //  firestore.collection("todos").doc(todos[element.index].id).delete();
-    });
-  };
-  // Show a message while todos are loading
-  /*  if (!isLoaded(contacts)) {
-    return "Loading";
-  } */
-
-  const onColumnNew = (newColumn) => {
-    const theColumn = {
-      id: new Date().getTime(),
-      ...newColumn,
-    };
-    console.log(theColumn);
-    return theColumn;
-  };
-
-const components = { 
-  Card: myCard,
-  NewCardForm: AddCard,
-};
-
-const handleDataChange = (newData) => {
-  console.log("data changed")
-  console.log(newData)
-}
-
   return (
     <Board
-      style={{ backgroundColor: "transparent", margin: "0 20px 0 0", padding: "0" }} // Style of BoardWrapper
-      data={data}
-      editable
-      canAddLanes
-      onDataChange={handleDataChange}
-      editLaneTitle
-      onLaneUpdate={(laneId, data) =>
-        console.log(`onLaneUpdate: ${laneId} -> ${data.title}`)
-      }
-      onLaneAdd={(t) => console.log("You added a line with title " + t.title)}
-      components={components}
+      allowRemoveLane
+      allowRenameColumn
+      allowRemoveCard
+      onLaneRemove={console.log}
+      onCardRemove={console.log}
+      onLaneRename={console.log}
+      allowAddCard={{ on: "top" }}
+      onNewCardConfirm={(draftCard) => ({
+        id: new Date().getTime(),
+        ...draftCard,
+      })}
+      renderCard={({ title, description, dueDate, project, assignedTo }, { removeCard, dragging }) => (
+        <Card dragging={dragging} title={title} description={description} dueDate={dueDate} project={project} assignedTo={assignedTo}>
+        
+          <button type="button" onClick={removeCard}>
+            Remove Card
+          </button>
+        </Card>
+      )}
+      onCardNew={console.log}
+      initialBoard={board}
     />
   );
 };

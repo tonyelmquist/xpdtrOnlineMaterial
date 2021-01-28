@@ -9,11 +9,15 @@ import {
 
 // components
 import PageTitle from "../../components/PageTitle";
+import EditIcon from "@material-ui/icons/Edit";
+import Button from "@material-ui/core/Button";
 import NewProject from "./NewProject";
+import EditProject from "./EditProject";
 import { Grid } from "@material-ui/core";
 import firebase from "firebase";
 import SentimentDissatisfiedIcon from "@material-ui/icons/SentimentDissatisfied";
 import DataTable from "../../components/DataTable/DataTable";
+import ConfirmDialog from "../../components/ConfirmDialog";
 
 import Fade from "@material-ui/core/Fade";
 
@@ -32,6 +36,14 @@ function Projects() {
     editOpen: false,
   });
 
+  const openProject = (id) => {
+    setCurrentId({ openId: id, editOpen: true });
+  };
+
+  const closeProject = () => {
+    setCurrentId({ ...currentId, editOpen: false });
+  };
+
   const projectQuery = {
     collection: "projects",
     limitTo: 10,
@@ -48,6 +60,9 @@ function Projects() {
   useFirestoreConnect(() => [contactQuery]);
   useFirestoreConnect(() => [buildingQuery]);
 
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [dataToDelete, setDataToDelete] = useState(null);
+
   const projects = useSelector(
     ({ firestore: { ordered } }) => ordered.projects,
   );
@@ -60,14 +75,37 @@ function Projects() {
     ({ firestore: { ordered } }) => ordered.buildings,
   );
 
+  console.log(projects);
+
+  console.log(buildings);
+
+  const extendedProjects =
+    projects &&
+    projects.map((project) => ({
+      ...project,
+      buildingName:
+        buildings &&
+        buildings.find((building) => building.id === project.building)
+          .buildingName,
+      clientName:
+        contacts &&
+        contacts.find((contact) => contact.id === project.client)
+          .fullName,
+    }));
+
   const firestore = useFirestore();
 
-  const deleteProjects = (data) => {
-    console.log(data.data);
-    data.data.forEach((element) => {
+  const handleDeleteProject = (data) => {
+    setDataToDelete(data.data);
+    setConfirmOpen(true);
+  };
+
+  const deleteprojects = () => {
+    dataToDelete.forEach((element) => {
       firestore.collection("projects").doc(projects[element.index].id).delete();
     });
   };
+
   // Show a message while todos are loading
   if (!isLoaded(projects)) {
     return "Loading";
@@ -112,7 +150,7 @@ function Projects() {
       },
     },
     {
-      name: "building.buildingName",
+      name: "buildingName",
       label: "Building",
       options: {
         filter: true,
@@ -135,6 +173,47 @@ function Projects() {
         sort: true,
       },
     },
+    {
+      name: "clientName",
+      label: "Client",
+      options: {
+        filter: true,
+        sort: true,
+      },
+    },
+    {
+      name: "projectManager",
+      label: "PM",
+      options: {
+        filter: true,
+        sort: true,
+      },
+    },
+    {
+      name: "status",
+      label: "Status",
+      options: {
+        filter: true,
+        sort: true,
+      },
+    },
+
+    {
+      name: "id",
+      label: " ",
+      options: {
+        filter: false,
+        sort: false,
+        empty: true,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <Button onClick={() => openProject(value)}>
+              <EditIcon />
+            </Button>
+          );
+        },
+      },
+    },
   ];
 
   return (
@@ -143,12 +222,12 @@ function Projects() {
         <Grid container spacing={4}>
           <Grid item xs={12}>
             <DataTable
-              data={projects}
+              data={extendedProjects}
               columns={columns}
               options={{
                 filterType: "checkbox",
-                onRowsDelete: deleteProjects,
               }}
+              onRowsDelete={handleDeleteProject}
               title={"Projects"}
             />
           </Grid>
@@ -159,6 +238,24 @@ function Projects() {
         contacts={contacts}
         buildings={buildings}
       />
+      {currentId.editOpen ? (
+        <EditProject
+          user={currentUser}
+          id={currentId.openId}
+          open={currentId.editOpen}
+          onClose={closeProject}
+          buildings={buildings}
+          contacts={contacts}
+        />
+      ) : null}
+      <ConfirmDialog
+        title="Delete Project(s)?"
+        open={confirmOpen}
+        setOpen={setConfirmOpen}
+        onConfirm={deleteprojects}
+      >
+        Are you sure? This action cannot be undone.
+      </ConfirmDialog>
     </>
   );
 }
