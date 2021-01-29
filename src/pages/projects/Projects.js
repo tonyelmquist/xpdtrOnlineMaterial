@@ -10,6 +10,7 @@ import {
 // components
 import PageTitle from "../../components/PageTitle";
 import EditIcon from "@material-ui/icons/Edit";
+import Loading from "../../components/Loading";
 import Button from "@material-ui/core/Button";
 import NewProject from "./NewProject";
 import EditProject from "./EditProject";
@@ -75,10 +76,6 @@ function Projects() {
     ({ firestore: { ordered } }) => ordered.buildings,
   );
 
-  console.log(projects);
-
-  console.log(buildings);
-
   const extendedProjects =
     projects &&
     projects.map((project) => ({
@@ -89,8 +86,7 @@ function Projects() {
           .buildingName,
       clientName:
         contacts &&
-        contacts.find((contact) => contact.id === project.client)
-          .fullName,
+        contacts.find((contact) => contact.id === project.client).fullName,
     }));
 
   const firestore = useFirestore();
@@ -215,6 +211,8 @@ function Projects() {
       },
     },
   ];
+
+  if (buildings === undefined || contacts === undefined) return (<Loading />);
 
   return (
     <>

@@ -15,7 +15,7 @@ import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
 import { useFirestore } from "react-redux-firebase";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   appBar: {
     position: "relative",
     backgroundColor: theme.palette.secondary.main,
@@ -73,7 +73,7 @@ export default function NewProject(props) {
 
   const [values, setValues] = React.useState({
     customerReference: "",
-    dateCreated: null,
+    dateCreated: Date.now(),
     building: "",
     type: "",
     projectManager: "",
@@ -82,46 +82,13 @@ export default function NewProject(props) {
     engineer: "",
     client: "",
     tenant: "",
-    dateClosed: "",
+    dateClosed: null,
     DOBNumber: "",
     closed: false,
   });
 
-  const handleChange = name => event => {
+  const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
-  };
-
-  const setFirstNameChange = name => event => {
-    setValues({
-      ...values,
-      firstName: event.target.value,
-      fullName:
-        event.target.value +
-        (values.MI > "" ? ` ${values.MI} ` : " ") +
-        values.lastName,
-    });
-  };
-
-  const setMIChange = name => event => {
-    setValues({
-      ...values,
-      MI: event.target.value,
-      fullName:
-        values.firstName +
-        (event.target.value > "" ? ` ${event.target.value} ` : " ") +
-        values.lastName,
-    });
-  };
-
-  const setLastNameChange = name => event => {
-    setValues({
-      ...values,
-      lastName: event.target.value,
-      fullName:
-        values.firstName +
-        (values.MI > "" ? ` ${values.MI} ` : " ") +
-        event.target.value,
-    });
   };
 
   const handleClickOpen = () => {
@@ -203,8 +170,7 @@ export default function NewProject(props) {
                 margin="normal"
                 variant="outlined"
                 fullWidth
-              >
-              </TextField>
+              ></TextField>
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -212,11 +178,35 @@ export default function NewProject(props) {
                 label="Building"
                 className={classes.textField}
                 value={values.building}
-                onChange={setFirstNameChange("building")}
+                onChange={handleChange("building")}
                 margin="normal"
                 variant="outlined"
                 fullWidth
-              />
+                select
+              >
+                {props.buildings.map((building) => (
+                  <MenuItem value={building.id}>
+                    {building.customerReference}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                id="client"
+                label="Client"
+                className={classes.textField}
+                value={values.client}
+                onChange={handleChange("client")}
+                margin="normal"
+                variant="outlined"
+                fullWidth
+                select
+              >
+                {props.contacts.map((contact) => (
+                  <MenuItem value={contact.id}>{contact.fullName}</MenuItem>
+                ))}
+              </TextField>
             </Grid>
             <Grid item xs={12} sm={3}>
               <TextField
@@ -224,10 +214,11 @@ export default function NewProject(props) {
                 label="Created"
                 className={classes.textField}
                 value={values.dateCreated}
-                onChange={setMIChange("dateCreated")}
+                onChange={handleChange("dateCreated")}
                 margin="normal"
                 variant="outlined"
                 fullWidth
+                type="date"
               />
             </Grid>
             <Grid item xs={12} sm={3}>
@@ -236,10 +227,11 @@ export default function NewProject(props) {
                 label="Start date"
                 className={classes.textField}
                 value={values.dateStart}
-                onChange={setMIChange("dateStart")}
+                onChange={handleChange("dateStart")}
                 margin="normal"
                 variant="outlined"
                 fullWidth
+                type="date"
               />
             </Grid>
             <Grid item xs={12} sm={3}>
@@ -248,7 +240,7 @@ export default function NewProject(props) {
                 label="Type"
                 className={classes.textField}
                 value={values.dateClosed}
-                onChange={setMIChange("dateClosed")}
+                onChange={handleChange("dateClosed")}
                 margin="normal"
                 variant="outlined"
                 fullWidth
@@ -260,13 +252,12 @@ export default function NewProject(props) {
                 label="Status"
                 className={classes.textField}
                 value={values.status}
-                onChange={setLastNameChange("status")}
+                onChange={handleChange("status")}
                 margin="normal"
                 variant="outlined"
                 fullWidth
               />
             </Grid>
-           
           </Grid>
         </form>
       </Dialog>
