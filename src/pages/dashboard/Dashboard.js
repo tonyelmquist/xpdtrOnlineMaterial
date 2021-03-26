@@ -14,6 +14,8 @@ import Loading from "../../components/Loading/Loading";
 import Tables from "./Tables";
 import Charts from "./Charts";
 
+
+
 import Fade from "@material-ui/core/Fade";
 
 export default function Dashboard(props) {
@@ -27,11 +29,12 @@ export default function Dashboard(props) {
     showTable: false,
     tableToShow: 0,
     data: [],
+    title: ""
   });
 
-  const showTable = (tableToShow, data) => {
-    console.log(tableToShow, data);
-    setTables({ showTable: true, tableToShow, data });
+  const showTable = (tableToShow, data, title) => {
+    
+    setTables({ showTable: true, tableToShow, data, title });
   };
 
   const hideTable = () => {

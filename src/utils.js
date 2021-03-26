@@ -11,8 +11,6 @@ export const withFirestore = (WrappedComponent) => {
     }
 
     render() {
-      console.log("context")
-      console.log(this.context)
       return (
         <WrappedComponent
           {...this.props}

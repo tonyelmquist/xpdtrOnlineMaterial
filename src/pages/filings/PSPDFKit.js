@@ -109,7 +109,6 @@ export default class PSPDFKit extends Component {
 
   saveTheThings = () => {
     this._instance.exportInstantJSON().then((instantJSON) => {
-      console.log(this.props.formId)
       const theContent = JSON.stringify(instantJSON);
       this.props.saveFiling(theContent, this.props.formId);
     });

@@ -1,4 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useHistory, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+import {
+  useFirestoreConnect,
+  isLoaded,
+  isEmpty,
+  useFirestore,
+} from "react-redux-firebase";
+
 import {
   AppBar,
   Toolbar,
@@ -7,7 +17,10 @@ import {
   Menu,
   MenuItem,
   Fab,
+  Chip,
 } from "@material-ui/core";
+
+import FaceIcon from "@material-ui/icons/Face";
 import {
   Menu as MenuIcon,
   MailOutline as MailIcon,
@@ -16,7 +29,20 @@ import {
   Search as SearchIcon,
   Send as SendIcon,
   ArrowBack as ArrowBackIcon,
+  FolderOpen,
+  ContactPhone as PeopleIcon,
+  LibraryBooks as FormsIcon,
+  Home as HomeIcon,
+  QuestionAnswer as SupportIcon,
+  Settings,
+  Business as BuildingIcon,
+  PlaylistAddCheck as TaskIcon,
+  LocationCity as DOB,
+  Help as HelpIcon,
+  Group as GroupIcon,
 } from "@material-ui/icons";
+
+import queryString from "query-string";
 
 import classNames from "classnames";
 import x from "../../images/x.svg";
@@ -25,8 +51,7 @@ import d from "../../images/d.svg";
 import t from "../../images/t.svg";
 import r from "../../images/r.svg";
 
-import firebase from "firebase/app";
-import "firebase/auth";
+import firebase from "firebase";
 
 // styles
 import useStyles from "./styles";
@@ -41,69 +66,19 @@ import {
   useLayoutState,
   useLayoutDispatch,
   toggleSidebar,
+  clearBuilding,
+  clearContact,
+  clearProject,
 } from "../../context/LayoutContext";
-
-const messages = [
-  {
-    id: 0,
-    variant: "warning",
-    name: "Jane Hew",
-    message: "Hey! How is it going?",
-    time: "9:32",
-  },
-  {
-    id: 1,
-    variant: "success",
-    name: "Lloyd Brown",
-    message: "Check out my new Dashboard",
-    time: "9:18",
-  },
-  {
-    id: 2,
-    variant: "primary",
-    name: "Mark Winstein",
-    message: "I want rearrange the appointment",
-    time: "9:15",
-  },
-  {
-    id: 3,
-    variant: "secondary",
-    name: "Liana Dutti",
-    message: "Good news from sale department",
-    time: "9:09",
-  },
-];
-
-const notifications = [
-  { id: 0, color: "warning", message: "Check out this awesome ticket" },
-  {
-    id: 1,
-    color: "success",
-    type: "info",
-    message: "What is the best way to get ...",
-  },
-  {
-    id: 2,
-    color: "secondary",
-    type: "notification",
-    message: "This is just a simple notification",
-  },
-  {
-    id: 3,
-    color: "primary",
-    type: "e-commerce",
-    message: "12 new orders has arrived today",
-  },
-];
 
 const signOut = () => {
   firebase
     .auth()
     .signOut()
-    .then(function() {
+    .then(function () {
       // Sign-out successful.
     })
-    .catch(function(error) {
+    .catch(function (error) {
       // An error happened
     });
 };
@@ -113,7 +88,10 @@ export default function Header(props) {
 
   // global
   var layoutState = useLayoutState();
+
   var layoutDispatch = useLayoutDispatch();
+
+  const { currentBuilding, currentContact, currentProject } = useLayoutState();
 
   // local
   var [mailMenu, setMailMenu] = useState(null);
@@ -125,7 +103,39 @@ export default function Header(props) {
 
   const { displayName, email } = firebase.auth().currentUser;
 
-  console.log(firebase.auth().currentUser);
+  const location = useLocation();
+  const history = useHistory();
+
+  const onDeleteParam = (paramToDelete) => {
+    const queryParams = new URLSearchParams(location.search);
+
+    queryParams.delete(paramToDelete);
+    history.replace({
+      search: queryParams.toString(),
+    });
+  };
+
+  const buildings = useSelector((store) => store.firestore.ordered.buildings);
+
+  const buildingName =
+    buildings && buildings.find((building) => building.id === currentBuilding);
+
+  const buildingCustomerReference =
+    buildingName && buildingName.customerReference;
+
+  const contacts = useSelector((store) => store.firestore.ordered.contacts);
+
+  const contactName =
+    contacts && contacts.find((contact) => contact.id === currentContact);
+
+  const contactFullName = contactName && contactName.fullName;
+
+  const projects = useSelector((store) => store.firestore.ordered.projects);
+
+  const projectName =
+    projects && projects.find((project) => project.id === currentProject);
+
+  const projectFullName = projectName && projectName.customerReference;
 
   return (
     <AppBar position="fixed" className={classes.appBar}>
@@ -165,8 +175,34 @@ export default function Header(props) {
           <img src={t} style={{ width: "40px", height: "40px" }} />
           <img src={r} style={{ width: "40px", height: "40px" }} />
         </IconButton>
+        {buildingName && (
+          <Chip
+            icon={<BuildingIcon />}
+            label={buildingCustomerReference}
+            color="secondary"
+            onDelete={() => clearBuilding(layoutDispatch)}
+          />
+        )}
+
+        {contactName && (
+          <Chip
+            icon={<PeopleIcon />}
+            label={contactFullName}
+            color="secondary"
+            onDelete={() => clearContact(layoutDispatch)}
+          />
+        )}
+        {projectName && (
+          <Chip
+            icon={<FolderOpen />}
+            label={projectFullName}
+            color="secondary"
+            onDelete={() => clearProject(layoutDispatch)}
+          />
+        )}
+
         <div className={classes.grow} />
-        <div
+        {/*   <div
           className={classNames(classes.search, {
             [classes.searchFocused]: isSearchOpen,
           })}
@@ -185,180 +221,18 @@ export default function Header(props) {
               root: classes.inputRoot,
               input: classes.inputInput,
             }}
-          />
-        </div>
-        <IconButton
-          color="inherit"
-          aria-haspopup="true"
-          aria-controls="mail-menu"
-          onClick={e => {
-            setNotificationsMenu(e.currentTarget);
-            setIsNotificationsUnread(false);
-          }}
-          className={classes.headerMenuButton}
-        >
-          <Badge
-            badgeContent={isNotificationsUnread ? notifications.length : null}
-            color="warning"
-          >
-            <NotificationsIcon classes={{ root: classes.headerIcon }} />
-          </Badge>
-        </IconButton>
-        <IconButton
-          color="inherit"
-          aria-haspopup="true"
-          aria-controls="mail-menu"
-          onClick={e => {
-            setMailMenu(e.currentTarget);
-            setIsMailsUnread(false);
-          }}
-          className={classes.headerMenuButton}
-        >
-          <Badge
-            badgeContent={isMailsUnread ? messages.length : null}
-            color="secondary"
-          >
-            <MailIcon classes={{ root: classes.headerIcon }} />
-          </Badge>
-        </IconButton>
+          /> 
+        </div>*/}
+
         <IconButton
           aria-haspopup="true"
           color="inherit"
           className={classes.headerMenuButton}
           aria-controls="profile-menu"
-          onClick={e => setProfileMenu(e.currentTarget)}
+          onClick={(e) => setProfileMenu(e.currentTarget)}
         >
           <AccountIcon classes={{ root: classes.headerIcon }} />
         </IconButton>
-        <Menu
-          id="mail-menu"
-          open={Boolean(mailMenu)}
-          anchorEl={mailMenu}
-          onClose={() => setMailMenu(null)}
-          MenuListProps={{ className: classes.headerMenuList }}
-          className={classes.headerMenu}
-          classes={{ paper: classes.profileMenu }}
-          disableAutoFocusItem
-        >
-          <div className={classes.profileMenuUser}>
-            <Typography variant="h4" weight="medium">
-              New Messages
-            </Typography>
-            <Typography
-              className={classes.profileMenuLink}
-              component="a"
-              color="secondary"
-            >
-              {messages.length} New Messages
-            </Typography>
-          </div>
-          {messages.map(message => (
-            <MenuItem key={message.id} className={classes.messageNotification}>
-              <div className={classes.messageNotificationSide}>
-                <UserAvatar color={message.variant} name={message.name} />
-                <Typography size="sm" color="text" colorBrightness="secondary">
-                  {message.time}
-                </Typography>
-              </div>
-              <div
-                className={classNames(
-                  classes.messageNotificationSide,
-                  classes.messageNotificationBodySide,
-                )}
-              >
-                <Typography weight="medium" gutterBottom>
-                  {message.name}
-                </Typography>
-                <Typography color="text" colorBrightness="secondary">
-                  {message.message}
-                </Typography>
-              </div>
-            </MenuItem>
-          ))}
-          <Fab
-            variant="extended"
-            color="primary"
-            aria-label="Add"
-            className={classes.sendMessageButton}
-          >
-            Send New Message
-            <SendIcon className={classes.sendButtonIcon} />
-          </Fab>
-        </Menu>
-        <Menu
-          id="notifications-menu"
-          open={Boolean(notificationsMenu)}
-          anchorEl={notificationsMenu}
-          onClose={() => setNotificationsMenu(null)}
-          className={classes.headerMenu}
-          disableAutoFocusItem
-        >
-          {notifications.map(notification => (
-            <MenuItem
-              key={notification.id}
-              onClick={() => setNotificationsMenu(null)}
-              className={classes.headerMenuItem}
-            >
-              <Notification {...notification} typographyVariant="inherit" />
-            </MenuItem>
-          ))}
-        </Menu>
-        <Menu
-          id="profile-menu"
-          open={Boolean(profileMenu)}
-          anchorEl={profileMenu}
-          onClose={() => setProfileMenu(null)}
-          className={classes.headerMenu}
-          classes={{ paper: classes.profileMenu }}
-          disableAutoFocusItem
-        >
-          <div className={classes.profileMenuUser}>
-            <Typography variant="h4" weight="medium">
-              {displayName}
-            </Typography>
-            <Typography
-              className={classes.profileMenuLink}
-              component="a"
-              color="primary"
-              href="https://flatlogic.com"
-            >
-              {email}
-            </Typography>
-          </div>
-          <MenuItem
-            className={classNames(
-              classes.profileMenuItem,
-              classes.headerMenuItem,
-            )}
-          >
-            <AccountIcon className={classes.profileMenuIcon} /> Profile
-          </MenuItem>
-          <MenuItem
-            className={classNames(
-              classes.profileMenuItem,
-              classes.headerMenuItem,
-            )}
-          >
-            <AccountIcon className={classes.profileMenuIcon} /> Tasks
-          </MenuItem>
-          <MenuItem
-            className={classNames(
-              classes.profileMenuItem,
-              classes.headerMenuItem,
-            )}
-          >
-            <AccountIcon className={classes.profileMenuIcon} /> Messages
-          </MenuItem>
-          <div className={classes.profileMenuUser}>
-            <Typography
-              className={classes.profileMenuLink}
-              color="primary"
-              onClick={() => signOut()}
-            >
-              Sign Out
-            </Typography>
-          </div>
-        </Menu>
       </Toolbar>
     </AppBar>
   );

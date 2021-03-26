@@ -7,6 +7,18 @@ function layoutReducer(state, action) {
   switch (action.type) {
     case "TOGGLE_SIDEBAR":
       return { ...state, isSidebarOpened: !state.isSidebarOpened };
+    case "SET_BUILDING":
+      return { ...state, currentBuilding: action.payload };
+    case "CLEAR_BUILDING":
+      return { ...state, currentBuilding: "" };
+    case "SET_PROJECT":
+      return { ...state, currentProject: action.payload };
+    case "CLEAR_PROJECT":
+      return { ...state, currentProject: "" };
+    case "SET_CONTACT":
+      return { ...state, currentContact: action.payload };
+    case "CLEAR_CONTACT":
+      return { ...state, currentContact: "" };
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);
     }
@@ -42,11 +54,50 @@ function useLayoutDispatch() {
   return context;
 }
 
-export { LayoutProvider, useLayoutState, useLayoutDispatch, toggleSidebar };
+export { LayoutProvider, useLayoutState, useLayoutDispatch, toggleSidebar, setBuilding, clearBuilding, setContact, clearContact, setProject, clearProject};
 
 // ###########################################################
 function toggleSidebar(dispatch) {
   dispatch({
     type: "TOGGLE_SIDEBAR",
+  });
+}
+
+function setBuilding(dispatch, id) {
+  dispatch({
+    type: "SET_BUILDING",
+    payload: id
+  });
+}
+
+function clearBuilding(dispatch) {
+  dispatch({
+    type: "CLEAR_BUILDING",
+  });
+}
+
+function setContact(dispatch, id) {
+  dispatch({
+    type: "SET_CONTACT",
+    payload: id,
+  });
+}
+
+function clearContact(dispatch) {
+  dispatch({
+    type: "CLEAR_CONTACT",
+  });
+}
+
+function setProject(dispatch, id) {
+  dispatch({
+    type: "SET_PROJECT",
+    payload: id,
+  });
+}
+
+function clearProject(dispatch) {
+  dispatch({
+    type: "CLEAR_PROJECT",
   });
 }

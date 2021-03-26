@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useFirestoreConnect, isLoaded, isEmpty } from "react-redux-firebase";
 import Card from "./Card"
+import NewToDo from "./NewToDo"
 
 import firebase from "firebase";
 
@@ -89,19 +90,11 @@ const ToDo = () => {
     ],
   };
 
-  return (
+  return (<>
     <Board
       allowRemoveLane
       allowRenameColumn
       allowRemoveCard
-      onLaneRemove={console.log}
-      onCardRemove={console.log}
-      onLaneRename={console.log}
-      allowAddCard={{ on: "top" }}
-      onNewCardConfirm={(draftCard) => ({
-        id: new Date().getTime(),
-        ...draftCard,
-      })}
       renderCard={({ title, description, dueDate, project, assignedTo }, { removeCard, dragging }) => (
         <Card dragging={dragging} title={title} description={description} dueDate={dueDate} project={project} assignedTo={assignedTo}>
         
@@ -110,9 +103,10 @@ const ToDo = () => {
           </button>
         </Card>
       )}
-      onCardNew={console.log}
       initialBoard={board}
     />
+    <NewToDo contacts/>
+    </>
   );
 };
 

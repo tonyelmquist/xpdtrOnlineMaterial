@@ -13,12 +13,11 @@ type MyProps = {
 export default class PopupTable extends React.Component<MyProps> {
 
   public render() {
-
     return (
       <DataTable
         data={this.props.table.data}
         columns={tables[this.props.table.tableToShow].columns}
-        title={"Job Applications"}
+        title={this.props.table.title}
       />
     );
   }

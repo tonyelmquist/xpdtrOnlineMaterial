@@ -1,25 +1,40 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useFirestoreConnect, isLoaded, isEmpty } from "react-redux-firebase";
+import { useHistory } from "react-router-dom";
 
+import { useLayoutDispatch, setBuilding } from "../../context/LayoutContext";
 
 // components
 import PageTitle from "../../components/PageTitle";
 import ConfirmDialog from "../../components/ConfirmDialog";
-import EditIcon from '@material-ui/icons/Edit';
-import Button from '@material-ui/core/Button';
+import {
+  Edit as EditIcon,
+  Dashboard as HomeIcon,
+  LibraryBooks as FormsIcon,
+} from "@material-ui/icons";
+
+import PushPin from "../../images/push_pin-24px.svg";
+
+import Button from "@material-ui/core/Button";
 import NewBuilding from "./NewBuilding";
 import EditBuilding from "./EditBuilding";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
 import { Grid } from "@material-ui/core";
 import firebase from "firebase";
 import SentimentDissatisfiedIcon from "@material-ui/icons/SentimentDissatisfied";
 
 import { useFirestore } from "react-redux-firebase";
-import DataTable from '../../components/DataTable/DataTable';
+import DataTable from "../../components/DataTable/DataTable";
 
 function Buildings() {
   // Attach building listener
   const currentUser = firebase.auth().currentUser.uid;
+
+  const history = useHistory();
+
+  var layoutDispatch = useLayoutDispatch();
 
   const buildingQuery = {
     collection: "buildings",
@@ -32,17 +47,24 @@ function Buildings() {
     editOpen: false,
   });
 
-    const openBuilding = (id) => {
-      setCurrentId({ openId: id, editOpen: true });
-    };
+  const openBuilding = (id) => {
+    setCurrentId({ openId: id, editOpen: true });
+  };
 
-      const closeBuilding = () => {
-        setCurrentId({ ...currentId, editOpen: false });
-      };
+  const closeBuilding = () => {
+    setCurrentId({ ...currentId, editOpen: false });
+  };
 
+  const goToDashboard = (id) => {
+    history.push(`/app/home?bid=${id}`);
+  };
 
-    const [confirmOpen, setConfirmOpen] = useState(false);
-    const [dataToDelete, setDataToDelete] = useState(null);
+  const goToForms = (id) => {
+    history.push(`/app/forms?bid=${id}`);
+  };
+
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [dataToDelete, setDataToDelete] = useState(null);
 
   useFirestoreConnect(() => [buildingQuery]);
 
@@ -153,6 +175,31 @@ function Buildings() {
       },
     },
     {
+      name: "track",
+      label: "Track",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <FormControlLabel
+              value={value ? "Yes" : "No"}
+              control={
+                <Switch
+                  color="primary"
+                  checked={value}
+                  value={value ? "Yes" : "No"}
+                />
+              }
+              /*               onChange={(event) => {
+                updateValue(event.target.value === "Yes" ? false : true);
+              }} */
+            />
+          );
+        },
+      },
+    },
+    {
       name: "id",
       label: " ",
       options: {
@@ -161,9 +208,14 @@ function Buildings() {
         empty: true,
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
-            <Button onClick={() => openBuilding(value)}>
-              <EditIcon />
-            </Button>
+            <>
+              <Button onClick={() => setBuilding(layoutDispatch, value)}>
+                <img src={PushPin} />
+              </Button>
+              <Button onClick={() => openBuilding(value)}>
+                <EditIcon />
+              </Button>
+            </>
           );
         },
       },

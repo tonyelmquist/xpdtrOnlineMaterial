@@ -7,6 +7,8 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
 import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
 import Fab from "@material-ui/core/Fab";
@@ -93,6 +95,10 @@ export default function NewProject(props) {
 
   const handleClickOpen = () => {
     setOpen(true);
+  };
+
+  const handleCheckbox = (name) => (event) => {
+    setValues({ ...values, [name]: event.target.checked });
   };
 
   const handleClose = () => {
@@ -184,11 +190,12 @@ export default function NewProject(props) {
                 fullWidth
                 select
               >
-                {props.buildings.map((building) => (
-                  <MenuItem value={building.id}>
-                    {building.customerReference}
-                  </MenuItem>
-                ))}
+                {props.buildings &&
+                  props.buildings.map((building) => (
+                    <MenuItem value={building.id}>
+                      {building.customerReference}
+                    </MenuItem>
+                  ))}
               </TextField>
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -203,7 +210,7 @@ export default function NewProject(props) {
                 fullWidth
                 select
               >
-                {props.contacts.map((contact) => (
+                {props.contacts && props.contacts.map((contact) => (
                   <MenuItem value={contact.id}>{contact.fullName}</MenuItem>
                 ))}
               </TextField>
@@ -218,6 +225,9 @@ export default function NewProject(props) {
                 margin="normal"
                 variant="outlined"
                 fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
                 type="date"
               />
             </Grid>
@@ -231,6 +241,9 @@ export default function NewProject(props) {
                 margin="normal"
                 variant="outlined"
                 fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
                 type="date"
               />
             </Grid>
@@ -244,6 +257,9 @@ export default function NewProject(props) {
                 margin="normal"
                 variant="outlined"
                 fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={3}>
@@ -256,6 +272,20 @@ export default function NewProject(props) {
                 margin="normal"
                 variant="outlined"
                 fullWidth
+              />
+            </Grid>
+            <Grid item xs={1} sm={1} className={classes.checkBox}>
+              <FormControlLabel
+                label={"Track?"}
+                value={values.track ? "Yes" : "No"}
+                control={
+                  <Switch
+                    color="primary"
+                    checked={values.track}
+                    value={values.track ? "Yes" : "No"}
+                  />
+                }
+                onChange={handleCheckbox("track")}
               />
             </Grid>
           </Grid>

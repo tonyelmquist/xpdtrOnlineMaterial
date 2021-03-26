@@ -1,14 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useFirestoreConnect, isLoaded, isEmpty } from "react-redux-firebase";
-import MUIDataTable from "mui-datatables";
+import { useLocation, useHistory } from "react-router-dom";
+
+// components
+
+
+import { useLayoutDispatch, setContact, clearContact, useLayoutState} from "../../context/LayoutContext";
+
+import {
+  Edit as EditIcon,
+  Dashboard as HomeIcon,
+  LibraryBooks as FormsIcon,
+} from "@material-ui/icons";
+
+import PushPin from "../../images/push_pin-24px.svg";
 
 // components
 import PageTitle from "../../components/PageTitle/PageTitle";
-import EditIcon from "@material-ui/icons/Edit";
+
 import Button from "@material-ui/core/Button";
 import NewContact from "./NewContact";
 import EditContact from "./EditContact";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
 import { Grid } from "@material-ui/core";
 import firebase from "firebase";
 import SentimentDissatisfiedIcon from "@material-ui/icons/SentimentDissatisfied";
@@ -18,10 +33,19 @@ import ConfirmDialog from "../../components/ConfirmDialog";
 import { useFirestore } from "react-redux-firebase";
 import DataTable from "../../components/DataTable/DataTable";
 
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
 function Contacts() {
   // Attach contact listener
   const currentUser = firebase.auth().currentUser.uid;
+
+  const layoutDispatch = useLayoutDispatch();
+
+  const history = useHistory();
+
+  let query = useQuery();
 
   const contactQuery = {
     collection: "contacts",
@@ -44,6 +68,14 @@ function Contacts() {
     setCurrentId({ ...currentId, editOpen: false });
   };
 
+    const goToDashboard = (id) => {
+      history.push(`/app/home?cid=${id}`);
+    };
+
+    const goToForms = (id) => {
+      history.push(`/app/forms?cid=${id}`);
+    };
+
   useFirestoreConnect(() => [contactQuery]);
 
   const contacts = useSelector(
@@ -54,9 +86,8 @@ function Contacts() {
 
   const handleDeleteContact = (data) => {
     setDataToDelete(data.data);
-    setConfirmOpen(true)
-  }
-
+    setConfirmOpen(true);
+  };
 
   const deletecontacts = () => {
     dataToDelete.forEach((element) => {
@@ -167,6 +198,31 @@ function Contacts() {
       },
     },
     {
+      name: "track",
+      label: "Track",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <FormControlLabel
+              value={value ? "Yes" : "No"}
+              control={
+                <Switch
+                  color="primary"
+                  checked={value}
+                  value={value ? "Yes" : "No"}
+                />
+              }
+              /*               onChange={(event) => {
+                updateValue(event.target.value === "Yes" ? false : true);
+              }} */
+            />
+          );
+        },
+      },
+    },
+    {
       name: "id",
       label: " ",
       options: {
@@ -175,9 +231,14 @@ function Contacts() {
         empty: true,
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
-            <Button onClick={() => openContact(value)}>
-              <EditIcon />
-            </Button>
+            <>
+              <Button onClick={() => setContact(layoutDispatch, value)}>
+                <img src={PushPin} />
+              </Button>
+              <Button onClick={() => openContact(value)}>
+                <EditIcon />
+              </Button>
+            </>
           );
         },
       },

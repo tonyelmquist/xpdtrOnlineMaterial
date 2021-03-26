@@ -8,13 +8,15 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
 import Fab from "@material-ui/core/Fab";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
 import { useFirestore } from "react-redux-firebase";
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   appBar: {
     position: "relative",
     backgroundColor: theme.palette.secondary.main,
@@ -79,7 +81,7 @@ export default function NewBuilding(props) {
     cb: "",
   });
 
-  const handleChange = name => event => {
+  const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
   };
 
@@ -89,6 +91,9 @@ export default function NewBuilding(props) {
 
   const handleClose = () => {
     setOpen(false);
+  };
+  const handleCheckbox = (name) => (event) => {
+    setValues({ ...values, [name]: event.target.checked });
   };
 
   function addProject() {
@@ -141,72 +146,84 @@ export default function NewBuilding(props) {
           </Toolbar>
         </AppBar>
         <Grid container spacing={3}>
-              <form className={classes.container} noValidate autoComplete="off">
-                <TextField
-                  required
-                  id="customerReference"
-                  label="Name"
-                  className={classes.textField}
-                  value={values.customerReference}
-                  onChange={handleChange("customerReference")}
-                  margin="normal"
-                  variant="outlined"
+          <form className={classes.container} noValidate autoComplete="off">
+            <TextField
+              required
+              id="customerReference"
+              label="Name"
+              className={classes.textField}
+              value={values.customerReference}
+              onChange={handleChange("customerReference")}
+              margin="normal"
+              variant="outlined"
+            />
+            <TextField
+              id="BIN"
+              label="BIN"
+              className={classes.textField}
+              value={values.BIN}
+              onChange={handleChange("BIN")}
+              margin="normal"
+              variant="outlined"
+            />
+            <TextField
+              id="houseNumber"
+              label="House #"
+              className={classes.textField}
+              value={values.houseNumber}
+              onChange={handleChange("houseNumber")}
+              margin="normal"
+              variant="outlined"
+            />
+            <TextField
+              id="streetName"
+              label="Street"
+              className={classes.bigField}
+              value={values.streetName}
+              onChange={handleChange("streetName")}
+              margin="normal"
+              variant="outlined"
+            />
+            <TextField
+              id="block"
+              label="Block"
+              className={classes.textField}
+              value={values.block}
+              onChange={handleChange("block")}
+              margin="normal"
+              variant="outlined"
+            />
+            <TextField
+              id="lot"
+              label="Lot"
+              className={classes.textField}
+              value={values.lot}
+              onChange={handleChange("lot")}
+              margin="normal"
+              variant="outlined"
+            />
+            <TextField
+              id="cb"
+              label="CB"
+              className={classes.textField}
+              value={values.cb}
+              onChange={handleChange("cb")}
+              margin="normal"
+              variant="outlined"
+            />
+            <FormControlLabel
+              label={"Track?"}
+              value={values.track ? "Yes" : "No"}
+              control={
+                <Switch
+                  color="primary"
+                  checked={values.track}
+                  value={values.track ? "Yes" : "No"}
                 />
-                <TextField
-                  id="BIN"
-                  label="BIN"
-                  className={classes.textField}
-                  value={values.BIN}
-                  onChange={handleChange("BIN")}
-                  margin="normal"
-                  variant="outlined"
-                />
-                <TextField
-                  id="houseNumber"
-                  label="House #"
-                  className={classes.textField}
-                  value={values.houseNumber}
-                  onChange={handleChange("houseNumber")}
-                  margin="normal"
-                  variant="outlined"
-                />
-                <TextField
-                  id="streetName"
-                  label="Street"
-                  className={classes.bigField}
-                  value={values.streetName}
-                  onChange={handleChange("streetName")}
-                  margin="normal"
-                  variant="outlined"
-                />
-                <TextField
-                  id="block"
-                  label="Block"
-                  className={classes.textField}
-                  value={values.block}
-                  onChange={handleChange("block")}
-                  margin="normal"
-                  variant="outlined"
-                />
-                <TextField
-                  id="lot"
-                  label="Lot"
-                  className={classes.textField}
-                  value={values.lot}
-                  onChange={handleChange("lot")}
-                  margin="normal"
-                  variant="outlined"
-                />
-                <TextField
-                  id="cb"
-                  label="CB"
-                  className={classes.textField}
-                  value={values.cb}
-                  onChange={handleChange("cb")}
-                  margin="normal"
-                  variant="outlined"
-                />
-              </form>
+              }
+              onChange={handleCheckbox("track")}
+            />
+          </form>
         </Grid>
       </Dialog>
     </div>

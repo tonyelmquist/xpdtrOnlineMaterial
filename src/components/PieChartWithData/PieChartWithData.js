@@ -4,6 +4,7 @@ import { Grid } from "@material-ui/core";
 import { useTheme } from "@material-ui/styles";
 
 import { ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import SentimentDissatisfiedIcon from "@material-ui/icons/SentimentDissatisfied";
 
 import { Typography } from "../Wrappers/Wrappers";
 import Loading from "../Loading/Loading";
@@ -40,8 +41,6 @@ const PieChartWithData = ({ data, dataKey, title, showTable, tableNumber }) => {
   var theme = useTheme();
   if (!data) return <Loading />;
 
-  if (data.length === 0) return null;
-
   var chartData = data.reduce(function (obj, v) {
     // increment or set the property
     // `(obj[v.status] || 0)` returns the property value if defined
@@ -57,6 +56,38 @@ const PieChartWithData = ({ data, dataKey, title, showTable, tableNumber }) => {
     value: entry[1],
     color: colors[index],
   }));
+
+  if (data.length === 0)
+    return (
+      <Fade in>
+        <Widget
+          title={title}
+          upperTitle
+          className={classes.card}
+          showTable={showTable}
+          tableNumber={tableNumber}
+          data={data}
+        >
+
+              <ResponsiveContainer width="100%" height={300}>
+               
+                  <Grid
+                    item
+                    xs={12}
+                    style={{ textAlign: "center", fontSize: "1.5rem" }}
+                  >
+                    <SentimentDissatisfiedIcon
+                      style={{ width: "100px", height: "100px", marginTop: "60px"}}
+                    />
+                    <p>No matching records found</p>
+                    
+                  </Grid>
+      
+              </ResponsiveContainer>
+
+        </Widget>
+      </Fade>
+    );
 
   return (
     <Fade in>

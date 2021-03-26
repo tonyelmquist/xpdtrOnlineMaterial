@@ -11,12 +11,14 @@ import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
 import Fab from "@material-ui/core/Fab";
 import Paper from "@material-ui/core/Paper";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
 import Grid from "@material-ui/core/Grid";
 import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
 import { useFirestore } from "react-redux-firebase";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   appBar: {
     position: "relative",
     backgroundColor: theme.palette.secondary.main,
@@ -97,11 +99,11 @@ export default function NewContact(props) {
     hic: "",
   });
 
-  const handleChange = name => event => {
+  const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
   };
 
-  const setFirstNameChange = name => event => {
+  const setFirstNameChange = (name) => (event) => {
     setValues({
       ...values,
       firstName: event.target.value,
@@ -112,7 +114,7 @@ export default function NewContact(props) {
     });
   };
 
-  const setMIChange = name => event => {
+  const setMIChange = (name) => (event) => {
     setValues({
       ...values,
       MI: event.target.value,
@@ -123,7 +125,7 @@ export default function NewContact(props) {
     });
   };
 
-  const setLastNameChange = name => event => {
+  const setLastNameChange = (name) => (event) => {
     setValues({
       ...values,
       lastName: event.target.value,
@@ -136,6 +138,9 @@ export default function NewContact(props) {
 
   const handleClickOpen = () => {
     setOpen(true);
+  };
+  const handleCheckbox = (name) => (event) => {
+    setValues({ ...values, [name]: event.target.checked });
   };
 
   const handleClose = () => {
@@ -246,7 +251,7 @@ export default function NewContact(props) {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={5}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 id="lastName"
                 label="Last Name"
@@ -256,6 +261,20 @@ export default function NewContact(props) {
                 margin="normal"
                 variant="outlined"
                 fullWidth
+              />
+            </Grid>
+            <Grid item xs={1} sm={1} className={classes.checkBox}>
+              <FormControlLabel
+                label={"Track?"}
+                value={values.track ? "Yes" : "No"}
+                control={
+                  <Switch
+                    color="primary"
+                    checked={values.track}
+                    value={values.track ? "Yes" : "No"}
+                  />
+                }
+                onChange={handleCheckbox("track")}
               />
             </Grid>
             <Grid item xs={12} sm={12}>

@@ -76,10 +76,6 @@ const ViewPDF = (props) => {
     const pdfViewer = childRef.current;
 
 
-    console.log(pdfViewer);
-    console.log(document.getElementById("pdfComponent").elements);
-
-
 /*     pdfViewer.exportFormFieldsAsObject().then(function (value) {
       var a = JSON.parse(value);
       console.log(a);

@@ -47,7 +47,7 @@ export default function Widget({
                   aria-owns="widget-menu"
                   aria-haspopup="true"
                   onClick={() => {
-                    showTable(tableNumber, data);
+                    showTable(tableNumber, data, title);
                   }}
                   buttonRef={setMoreButtonRef}
                 >

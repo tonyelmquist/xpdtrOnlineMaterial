@@ -10,12 +10,16 @@ import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
 import Fab from "@material-ui/core/Fab";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
+import Checkbox from "@material-ui/core/Checkbox";
 import { useFirestore } from "react-redux-firebase";
 import { useSelector } from "react-redux";
+
 import { useFirestoreConnect } from "react-redux-firebase";
 
 const useStyles = makeStyles((theme) => ({
@@ -50,6 +54,9 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
     fontSize: "1.25rem",
   },
+  checkBox: {
+    lineHeight: "5rem",
+  },
   bigField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
@@ -72,7 +79,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const EditContact = (props) => {
   const classes = useStyles();
 
-
   const firestore = useFirestore();
 
   const contact = useSelector(
@@ -85,6 +91,10 @@ const EditContact = (props) => {
 
   const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
+  };
+
+  const handleCheckbox = (name) => (event) => {
+    setValues({ ...values, [name]: event.target.checked });
   };
 
   const setFirstNameChange = (name) => (event) => {
@@ -211,7 +221,7 @@ const EditContact = (props) => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={5}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 id="lastName"
                 label="Last Name"
@@ -221,6 +231,20 @@ const EditContact = (props) => {
                 margin="normal"
                 variant="outlined"
                 fullWidth
+              />
+            </Grid>
+            <Grid item xs={1} sm={1} className={classes.checkBox}>
+              <FormControlLabel
+                label={"Track?"}
+                value={values.track ? "Yes" : "No"}
+                control={
+                  <Switch
+                    color="primary"
+                    checked={values.track}
+                    value={values.track ? "Yes" : "No"}
+                  />
+                }
+                onChange={handleCheckbox("track")}
               />
             </Grid>
             <Grid item xs={12} sm={12}>

@@ -4,7 +4,7 @@ import {
   FolderOpen,
   ContactPhone as PeopleIcon,
   LibraryBooks as FormsIcon,
-  Home as HomeIcon,
+  Dashboard as HomeIcon,
   QuestionAnswer as SupportIcon,
   Settings,
   ArrowBack as ArrowBackIcon,
@@ -71,25 +71,6 @@ const structure = [
   { id: 10, label: "Help", link: "/app/help", icon: <HelpIcon /> },
   { id: 11, label: "Support", link: "/app/support", icon: <SupportIcon /> },
   { id: 12, type: "divider" },
-
-  {
-    id: 13,
-    label: "My recent",
-    link: "",
-    icon: <Dot size="large" color="warning" />,
-  },
-  {
-    id: 14,
-    label: "Starred",
-    link: "",
-    icon: <Dot size="large" color="primary" />,
-  },
-  {
-    id: 15,
-    label: "Background",
-    link: "",
-    icon: <Dot size="large" color="secondary" />,
-  },
 ];
 
 function Sidebar({ location }) {

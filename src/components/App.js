@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
 
 // components
@@ -13,6 +13,8 @@ import { useUserState } from "../context/UserContext";
 export default function App() {
   // global
   var { isAuthenticated } = useUserState();
+
+  const {filter, setFilter} = useState({type: "none", id: ""})
 
   return (
     <HashRouter>

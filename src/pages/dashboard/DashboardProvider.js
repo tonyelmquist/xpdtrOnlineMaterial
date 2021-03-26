@@ -11,6 +11,9 @@ import Dashboard from "./Dashboard";
 
 import Fade from "@material-ui/core/Fade";
 
+import PageTitle from "../../components/PageTitle";
+
+import SentimentDissatisfiedIcon from "@material-ui/icons/SentimentDissatisfied";
 // styles
 
 import Loading from "../../components/Loading/Loading";
@@ -21,19 +24,28 @@ export default function DashboardProvider(props) {
   const projectQuery = {
     collection: "projects",
     limitTo: 10,
-    where: ["userId", "==", currentUser],
+    where: [
+      ["userId", "==", currentUser],
+      ["track", "==", true],
+    ],
   };
 
   const contactQuery = {
     collection: "contacts",
     limitTo: 10,
-    where: ["userId", "==", currentUser],
+    where: [
+      ["userId", "==", currentUser],
+      ["track", "==", true],
+    ],
   };
 
   const buildingQuery = {
     collection: "buildings",
     limitTo: 10,
-    where: ["userId", "==", currentUser],
+    where: [
+      ["userId", "==", currentUser],
+      ["track", "==", true],
+    ],
   };
 
   useFirestoreConnect(() => [projectQuery]);
@@ -72,6 +84,25 @@ export default function DashboardProvider(props) {
       </>
     );
   }
+ if (isEmpty(contacts)&& isEmpty(buildings) && isEmpty(projects)) {return(
+   <Fade in>
+     <>
+       <PageTitle title="Dashboard" />
+       <Grid container spacing={4}>
+         <Grid item xs={12} style={{ textAlign: "center", fontSize: "2.5rem" }}>
+           <SentimentDissatisfiedIcon
+             style={{ width: "200px", height: "200px" }}
+           />
+           <p>Uh-oh! You are not tracking any projects, buildings or people yet.</p>{" "}
+           <p>
+             {" "}
+             Go to Buildings or Contacts or Projects to enter something to start tracking...
+           </p>
+         </Grid>
+       </Grid>
+     </>
+   </Fade>);
+ }
 
   return (
     <Dashboard projects={projects} contacts={contacts} buildings={buildings} />

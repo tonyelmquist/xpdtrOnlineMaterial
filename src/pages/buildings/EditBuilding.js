@@ -11,6 +11,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
 import Fab from "@material-ui/core/Fab";
 import Paper from "@material-ui/core/Paper";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
 import Grid from "@material-ui/core/Grid";
 import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
@@ -79,10 +81,13 @@ export default function EditBuilding(props) {
     ...building,
   });
 
+  const handleCheckbox = (name) => (event) => {
+    setValues({ ...values, [name]: event.target.checked });
+  };
+
   const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
   };
-
 
   const handleClose = () => {
     props.onClose();
@@ -195,6 +200,18 @@ export default function EditBuilding(props) {
               onChange={handleChange("cb")}
               margin="normal"
               variant="outlined"
+            />
+            <FormControlLabel
+              label={"Track?"}
+              value={values.track ? "Yes" : "No"}
+              control={
+                <Switch
+                  color="primary"
+                  checked={values.track}
+                  value={values.track ? "Yes" : "No"}
+                />
+              }
+              onChange={handleCheckbox("track")}
             />
           </form>
         </Grid>
