@@ -19,6 +19,7 @@ import Charts from "./Charts";
 import Fade from "@material-ui/core/Fade";
 
 export default function Dashboard(props) {
+  
   const { contacts, projects, buildings } = props;
 
   var classes = useStyles();
@@ -91,7 +92,7 @@ export default function Dashboard(props) {
         });
       },
     );
-  }, []);
+  }, [contacts, projects, buildings]);
 
   var applicantLicenseNumbers =
     contacts &&

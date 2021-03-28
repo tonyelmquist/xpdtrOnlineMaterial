@@ -11,6 +11,8 @@ import Dashboard from "./Dashboard";
 
 import Fade from "@material-ui/core/Fade";
 
+import { useLayoutState } from "../../context/LayoutContext";
+
 import PageTitle from "../../components/PageTitle";
 
 import SentimentDissatisfiedIcon from "@material-ui/icons/SentimentDissatisfied";
@@ -52,17 +54,27 @@ export default function DashboardProvider(props) {
   useFirestoreConnect(() => [contactQuery]);
   useFirestoreConnect(() => [buildingQuery]);
 
-  const contacts = useSelector(
-    ({ firestore: { ordered } }) => ordered.contacts,
-  );
+  const { currentBuilding, currentContact, currentProject } = useLayoutState();
 
-  const buildings = useSelector(
+  var contacts = useSelector(({ firestore: { ordered } }) => ordered.contacts);
+
+  if (currentContact && currentContact !== "") {
+    contacts = contacts.filter((contact) => contact.id === currentContact);
+  }
+
+  var buildings = useSelector(
     ({ firestore: { ordered } }) => ordered.buildings,
   );
 
-  const projects = useSelector(
-    ({ firestore: { ordered } }) => ordered.projects,
-  );
+  if (currentBuilding && currentBuilding !== "") {
+    buildings = buildings.filter((building) => building.id === currentBuilding);
+  }
+
+  var projects = useSelector(({ firestore: { ordered } }) => ordered.projects);
+
+  if (currentProject && currentProject !== "") {
+    projects = projects.filter((project) => project.id === currentProject);
+  }
 
   if (!isLoaded(contacts) || !isLoaded(buildings) || !isLoaded(projects)) {
     return (
@@ -84,27 +96,41 @@ export default function DashboardProvider(props) {
       </>
     );
   }
- if (isEmpty(contacts)&& isEmpty(buildings) && isEmpty(projects)) {return(
-   <Fade in>
-     <>
-       <PageTitle title="Dashboard" />
-       <Grid container spacing={4}>
-         <Grid item xs={12} style={{ textAlign: "center", fontSize: "2.5rem" }}>
-           <SentimentDissatisfiedIcon
-             style={{ width: "200px", height: "200px" }}
-           />
-           <p>Uh-oh! You are not tracking any projects, buildings or people yet.</p>{" "}
-           <p>
-             {" "}
-             Go to Buildings or Contacts or Projects to enter something to start tracking...
-           </p>
-         </Grid>
-       </Grid>
-     </>
-   </Fade>);
- }
+  if (isEmpty(contacts) && isEmpty(buildings) && isEmpty(projects)) {
+    return (
+      <Fade in>
+        <>
+          <PageTitle title="Dashboard" />
+          <Grid container spacing={4}>
+            <Grid
+              item
+              xs={12}
+              style={{ textAlign: "center", fontSize: "2.5rem" }}
+            >
+              <SentimentDissatisfiedIcon
+                style={{ width: "200px", height: "200px" }}
+              />
+              <p>
+                Uh-oh! You are not tracking any projects, buildings or people
+                yet.
+              </p>{" "}
+              <p>
+                {" "}
+                Go to Buildings or Contacts or Projects to enter something to
+                start tracking...
+              </p>
+            </Grid>
+          </Grid>
+        </>
+      </Fade>
+    );
+  }
 
   return (
-    <Dashboard projects={projects} contacts={contacts} buildings={buildings} />
+    <Dashboard
+      projects={projects}
+      contacts={contacts}
+      buildings={buildings}
+    />
   );
 }
