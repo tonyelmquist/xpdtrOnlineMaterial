@@ -5,6 +5,8 @@ var LayoutDispatchContext = React.createContext();
 
 function layoutReducer(state, action) {
   switch (action.type) {
+    case "SET_PRO": 
+      return { ...state, isPro: true}
     case "TOGGLE_SIDEBAR":
       return { ...state, isSidebarOpened: !state.isSidebarOpened };
     case "SET_BUILDING":
@@ -54,7 +56,7 @@ function useLayoutDispatch() {
   return context;
 }
 
-export { LayoutProvider, useLayoutState, useLayoutDispatch, toggleSidebar, setBuilding, clearBuilding, setContact, clearContact, setProject, clearProject};
+export { LayoutProvider, useLayoutState, useLayoutDispatch, toggleSidebar, setBuilding, clearBuilding, setContact, clearContact, setProject, clearProject, setPro};
 
 // ###########################################################
 function toggleSidebar(dispatch) {
@@ -67,6 +69,12 @@ function setBuilding(dispatch, id) {
   dispatch({
     type: "SET_BUILDING",
     payload: id
+  });
+}
+
+function setPro(dispatch) {
+  dispatch({
+    type:"SET_PRO"
   });
 }
 

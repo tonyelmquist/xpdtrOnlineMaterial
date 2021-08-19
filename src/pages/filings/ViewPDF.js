@@ -8,8 +8,8 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
-import PSPDFKit from "./PSPDFKit";
 import Fab from "@material-ui/core/Fab";
+import PSPDFKit from "./PSPDFKit";
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -115,8 +115,6 @@ const ViewPDF = (props) => {
         </AppBar>
         <PSPDFKit
           pdfUrl={`/pdf/${props.values.fileName}`}
-          licenseKey={"mBKRBFoB4MRDD8LjGwIEz0rw_4pCxuw7ty8CiOzVfJoyzmQheSjBCaY5R7xzEjq-BrK-dXDIrXIXRTg9ueW3OxjCfVWGPX5n2MpHdU8-WdQEoEm1yCuKON6hcrOeYosb29Ah6wj7gNPpkQuvCnT4z5k3hyn4NPKYzwWUo9gMej7S6mj8aDbsBqAjjKx0jLsPO3ApG2SWA6m2oSHS1i6dAMuXplSB7EBU4E0UjXGNzhhGvtg6ozuHCSHSgNNLAZvPUWSorC1spMrB2rOT3T0bbQVnbOXPEj3n0HrkhgWVsf5DJ-jUM71j5GsO1NXJMh-ok_s0_LZsDOlZPdcb-c_2EHgQ-NsRnhXVJ2E5J3exJTdGmveVvzja5qopBpV5RA9v5HMrC3-I4iotY9mGAfknYRzs2gUasmkLAlEoBQ3N1Ckip_L-1xUXaeOITJXLkFwhPEFYOaDQzK4sACPgyN3bWg=="}
-          baseUrl={baseUrl}
           saveFiling={handleSaveFiling}
           content={props.values.content}
           setSaveForm={setSaveForm}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   Route,
   Switch,
@@ -28,9 +28,12 @@ import Contacts from '../../pages/contacts/Contacts';
 import ToDo from '../../pages/todo/ToDo';
 import DOB from '../../pages/dob/DOB';
 
+
+
 // context
 import { useLayoutState } from "../../context/LayoutContext";
 import DashboardProvider from '../../pages/dashboard/DashboardProvider';
+
 
 
 function Layout(props) {
@@ -38,11 +41,11 @@ function Layout(props) {
 
   // global
   var layoutState = useLayoutState();
-
+  
   return (
     <div className={classes.root}>
       <>
-        <Header history={props.history} />
+        <Header history={props.history}/>
         <Sidebar />
         <div
           className={classnames(classes.content, {

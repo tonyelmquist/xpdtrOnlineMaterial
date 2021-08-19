@@ -10,11 +10,10 @@ import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
 import Fab from "@material-ui/core/Fab";
-import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
-import { useFirestore } from "react-redux-firebase";
+import { PinDropRounded } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -52,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     fontSize: "1.25rem",
-    width: "100%"
+    width: "100%",
   },
   bigField: {
     marginLeft: theme.spacing(1),
@@ -73,37 +72,35 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function NewToDo(props) {
+export default function EditToDo(props) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
 
   const [values, setValues] = React.useState({});
+
+  React.useEffect(() => {
+    let { title, description, details, assignedTo, due, id } = props.values;
+    title = title === undefined ? "" : title;
+    description = description === undefined ? "" : description;
+    details = details === undefined ? "" : details;
+    assignedTo = assignedTo === undefined ? "" : assignedTo;
+    due = due === undefined ? "" : due;
+    console.log(id)
+    setValues({ title, description, details, assignedTo, due, id });
+  }, [props.values]);
 
   const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
-    setOpen(false);
+    props.toggleEdit();
   };
 
   return (
     <div>
-      <Fab
-        color="primary"
-        aria-label="add"
-        onClick={handleClickOpen}
-        className={classes.fab}
-      >
-        <AddIcon />
-      </Fab>
       <Dialog
         maxWidth={"xl"}
-        open={open}
+        open={props.open}
         onClose={handleClose}
         TransitionComponent={Transition}
       >
@@ -112,7 +109,7 @@ export default function NewToDo(props) {
             <IconButton
               edge="start"
               color="inherit"
-              onClick={handleClose}
+              onClick={props.closeEdit}
               aria-label="close"
             >
               <CloseIcon />
@@ -123,12 +120,12 @@ export default function NewToDo(props) {
               weight="bold"
               className={classes.title}
             >
-              New Task
+              {values.title}
             </Typography>
-            <Button color="inherit" onClick={() => props.addNewCard(values)}>
+            <Button color="inherit" onClick={() => props.handleEdit(values)}>
               save
             </Button>
-            <Button color="inherit" onClick={handleClose}>
+            <Button color="inherit" onClick={props.closeEdit}>
               cancel
             </Button>
           </Toolbar>

@@ -18,9 +18,10 @@
     "firebase": "^7.2.1",
     "font-awesome": "^4.7.0",
     "i": "^0.3.6",
+    "lodash": "^4.17.21",
     "mui-datatables": "^2.6.4",
     "npm": "^6.14.8",
-    "pspdfkit": "https://customers.pspdfkit.com/npm/TRIAL-CkIWlqScFaw33v1ciRV9k61V2Q5ylJd0bDScYKI4Wq4_7ZR1KZXEsXVAixxYAHxOOjIvoTcE02rY-SD63KO5if6jFnh2Lmvfqtm0KxUVjzs/latest.tar.gz",
+    "pspdfkit": "^2021.5.1",
     "query-string": "^7.0.0",
     "react": "^16.8.6",
     "react-apexcharts": "^1.3.3",
@@ -39,7 +40,8 @@
     "redux-firestore": "^0.15.0",
     "redux-thunk": "^2.3.0",
     "tinycolor2": "^1.4.1",
-    "typescript": "^4.0.2"
+    "typescript": "^4.0.2",
+    "uuid": "^3.4.0"
   },
   "scripts": {
     "start": "react-scripts start",

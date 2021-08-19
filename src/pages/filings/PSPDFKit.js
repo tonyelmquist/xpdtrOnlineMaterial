@@ -1,23 +1,93 @@
-import React, { Component } from "react";
-import PSPDFKitWeb from "pspdfkit";
+import React, { useEffect, useRef } from "react";
+import { Save } from "@material-ui/icons";
 
-export default class PSPDFKit extends Component {
-  constructor(props, context) {
-    super(props, context);
-    this._instance = null;
-    this._container = null;
+const PSPDFKIT = (props) => {
+  const containerRef = useRef(null);
 
-    this.onRef = this.onRef.bind(this);
-    this.load = this.load.bind(this);
-    this.unload = this.unload.bind(this);
-    this.saveTheThings = this.saveTheThings.bind(this);
-  }
+  const saveTheThings = () => {
+    this._instance.exportInstantJSON().then((instantJSON) => {
+      const theContent = JSON.stringify(instantJSON);
+      this.props.saveFiling(theContent, this.props.formId);
+    });
+  };
 
-  onRef(container) {
-    this._container = container;
-  }
+  console.log(Save);
 
-  async load(props) {
+  useEffect(() => {
+    const container = containerRef.current;
+    let instance, PSPDFKit;
+    (async function () {
+      PSPDFKit = await import("pspdfkit");
+        const downloadButton = {
+          type: "custom",
+          id: "download-pdf",
+          icon: Save,
+          title: "Download",
+          onPress: () => {
+            this._instance.exportPDF().then((buffer) => {
+              const blob = new Blob([buffer], { type: "application/pdf" });
+              const fileName = "document.pdf";
+              if (window.navigator.msSaveOrOpenBlob) {
+                window.navigator.msSaveOrOpenBlob(blob, fileName);
+              } else {
+                const objectUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = objectUrl;
+                a.style = "display: none";
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(objectUrl);
+                document.body.removeChild(a);
+              }
+            });
+          },
+        };
+
+        const items = PSPDFKit.defaultToolbarItems;
+        // Add the download button to the toolbar.
+        items.push(downloadButton);
+
+        console.log(items);
+
+      if (props.content) {
+        instance = await PSPDFKit.load({
+          // Container where PSPDFKit should be mounted.
+          container,
+          // The document to open.
+          document: props.pdfUrl,
+          printMode: PSPDFKit.PrintMode.EXPORT_PDF,
+          toolbarItems: items,
+          //  instantJSON: JSON.parse(props.content),
+          // Use the public directory URL as a base URL. PSPDFKit will download its library assets from here.
+          baseUrl: `${window.location.protocol}//${window.location.host}/${process.env.PUBLIC_URL}`,
+        });
+      } else {
+        instance = await PSPDFKit.load({
+          // Container where PSPDFKit should be mounted.
+          container,
+          // The document to open.
+          document: props.pdfUrl,
+          printMode: PSPDFKit.PrintMode.EXPORT_PDF,
+          toolbarItems: items,
+
+          // Use the public directory URL as a base URL. PSPDFKit will download its library assets from here.
+          baseUrl: `${window.location.protocol}//${window.location.host}/${process.env.PUBLIC_URL}`,
+        });
+      }
+
+    
+    })();
+
+    return () => PSPDFKit && PSPDFKit.unload(container);
+  }, []);
+
+  return <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />;
+};
+
+export default PSPDFKIT;
+
+/*   async load(props) {
     console.log(`Loading ${props.pdfUrl}`);
 
     const downloadButton = {
@@ -80,9 +150,8 @@ export default class PSPDFKit extends Component {
       });
       instance.setFormFieldValues(updatedFormFieldValues);
     }); */
-  }
 
-  unload() {
+/* unload() {
     PSPDFKitWeb.unload(this._instance || this._container);
     this._instance = null;
   }
@@ -129,4 +198,4 @@ export default class PSPDFKit extends Component {
       </>
     );
   }
-}
+}*/
