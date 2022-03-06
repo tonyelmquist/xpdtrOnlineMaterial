@@ -4,7 +4,7 @@ import {
   Switch,
   Redirect,
   withRouter,
-} from "react-router-dom";
+} from "react-router";
 import classnames from "classnames";
 
 // styles
@@ -45,7 +45,7 @@ function Layout(props) {
   return (
     <div className={classes.root}>
       <>
-        <Header history={props.history}/>
+        <Header history={props.history} />
         <Sidebar />
         <div
           className={classnames(classes.content, {

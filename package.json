@@ -10,6 +10,8 @@
     "@material-ui/icons": "^4.2.1",
     "@material-ui/pickers": "^3.2.10",
     "@material-ui/styles": "^4.3.0",
+    "@syncfusion/ej2-react-grids": "^19.4.47",
+    "@syncfusion/ej2-react-pdfviewer": "^19.4.41",
     "apexcharts": "^3.26.0",
     "axios": "^0.21.1",
     "classnames": "^2.2.6",

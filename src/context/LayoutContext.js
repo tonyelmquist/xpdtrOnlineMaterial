@@ -73,6 +73,7 @@ function setBuilding(dispatch, id) {
 }
 
 function setPro(dispatch) {
+  console.log("setting pro")
   dispatch({
     type:"SET_PRO"
   });

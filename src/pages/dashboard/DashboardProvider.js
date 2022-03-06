@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 
 import { Grid } from "@material-ui/core";
-import { useTheme } from "@material-ui/styles";
 
 import firebase from "firebase";
 import { useSelector } from "react-redux";
@@ -131,6 +130,9 @@ export default function DashboardProvider(props) {
       projects={projects}
       contacts={contacts}
       buildings={buildings}
+      projectsFiltered={currentProject}
+      buildingFiltered={currentBuilding}
+      contactsFiltered={currentContact}
     />
   );
 }

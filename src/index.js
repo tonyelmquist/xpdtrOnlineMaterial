@@ -19,7 +19,8 @@ import { createFirestoreInstance } from "redux-firestore";
 import configureStore from "./store";
 import { firebase as fbConfig, reduxFirebase as rfConfig } from "./config";
 
-import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
+import "./styles/main.css"
+
 
 import Login from "./pages/login/Login";
 

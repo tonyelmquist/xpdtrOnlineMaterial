@@ -10,8 +10,9 @@ import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
 import Fab from "@material-ui/core/Fab";
 import PSPDFKit from "./PSPDFKit";
+import { FireplaceSharp } from "@material-ui/icons";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   appBar: {
     position: "relative",
     backgroundColor: theme.palette.secondary.main,
@@ -24,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     position: "absolute",
     right: "0",
     bottom: "0",
-    zIndex: "1000"
+    zIndex: "1000",
   },
   container: {
     display: "flex",
@@ -51,16 +52,33 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const ViewPDF = (props) => {
   const classes = useStyles();
 
-  const handleSetSaveForm = (value) => {
-    setSaveForm(value);
-  }
+  const saveData = () => {
+    var viewer = document.getElementById("container").ej2_instances[0];
+    const fieldsFilledOut = viewer.formFieldCollections.filter(
+      (field) =>
+        (field.value !== null &&
+          field.value !== "" &&
+          field.type === "Textbox") ||
+        field.isSelected ||
+        field.isChecked,
+    );
 
-  const handleSaveFiling = (content, id) => {
-    props.saveFiling(content, id);
-    handleSetSaveForm(false);
-  }
+    console.log(JSON.stringify(fieldsFilledOut));
 
-  const [saveForm, setSaveForm] = React.useState(false);
+    if (viewer.annotationCollection.length > 0) {
+      viewer.exportAnnotationsAsObject().then(function (value) {
+        props.saveFiling(JSON.stringify(fieldsFilledOut), value, props.id);
+      });
+    } else {
+      props.saveFiling(JSON.stringify(fieldsFilledOut), "", props.id);
+    }
+  };
+
+  function importAnnotation() {
+    const exportObject = JSON.parse(props.values.annotations);
+    var viewer = document.getElementById("container").ej2_instances[0];
+    viewer.importAnnotation(exportObject);
+  }
 
   const baseUrl = `${window.location.protocol}//${window.location.host}/${process.env.PUBLIC_URL}`;
 
@@ -76,7 +94,7 @@ const ViewPDF = (props) => {
           <Fab
             color="primary"
             aria-label="save"
-            onClick={() => handleSetSaveForm(true)}
+            onClick={() => saveData()}
             className={classes.fab}
           >
             Save
@@ -85,7 +103,7 @@ const ViewPDF = (props) => {
             color="secondary"
             aria-label="close"
             className={classes.fab}
-            onClick={props.handleSetEditorClosed}
+            onClick={importAnnotation}
           >
             Close
           </Fab>
@@ -113,17 +131,17 @@ const ViewPDF = (props) => {
             </Button>
           </Toolbar>
         </AppBar>
+
         <PSPDFKit
-          pdfUrl={`/pdf/${props.values.fileName}`}
-          saveFiling={handleSaveFiling}
+          pdfUrl={`${props.values.fileName}`}
+          saveFiling={saveData}
           content={props.values.content}
-          setSaveForm={setSaveForm}
-          saveForm={saveForm}
+          annotations={props.values.annotations}
           formId={props.values.id}
         />
       </Dialog>
     </div>
   );
-}
+};
 
 export default ViewPDF;

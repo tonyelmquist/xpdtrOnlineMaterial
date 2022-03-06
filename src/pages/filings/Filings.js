@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useFirestoreConnect, isLoaded, isEmpty } from "react-redux-firebase";
 import PdfIcon from "@material-ui/icons/PictureAsPdf";
@@ -14,6 +14,8 @@ import ViewPDF from "./ViewPDF";
 import { useFirestore } from "react-redux-firebase";
 import Button from "@material-ui/core/Button";
 import DataTable from "../../components/DataTable/DataTable";
+import ConfirmDialog from "../../components/ConfirmDialog";
+
 function Filings() {
   // Attach building listener
   const currentUser = firebase.auth().currentUser.uid;
@@ -24,7 +26,6 @@ function Filings() {
     where: ["userId", "==", currentUser],
   };
 
-  
   const [values, setValues] = React.useState({
     fileName: "",
     form: "",
@@ -37,14 +38,22 @@ function Filings() {
 
   const [editorOpen, setEditorOpen] = React.useState(false);
 
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [dataToDelete, setDataToDelete] = useState(null);
+
   useFirestoreConnect(() => [filingQuery]);
 
   const filings = useSelector(({ firestore: { ordered } }) => ordered.filings);
 
   const firestore = useFirestore();
 
-  const deleteFilings = (data) => {
-    data.data.forEach((element) => {
+  const handleDeleteFilings = (data) => {
+    setDataToDelete(data.data);
+    setConfirmOpen(true);
+  };
+
+  const deleteFilings = () => {
+    dataToDelete.forEach((element) => {
       firestore.collection("filings").doc(filings[element.index].id).delete();
     });
   };
@@ -52,29 +61,33 @@ function Filings() {
   const openFiling = (tableData) => {
     const { rowData } = tableData;
     setValues({
-      fileName: rowData[6],
+      fileName: rowData[7],
       content: rowData[5],
+      annotations: rowData[6],
       form: rowData[0],
       id: rowData[4],
     });
     handleSetEditorOpen();
   };
 
-  const saveFiling = (content, id) => {
+  const saveFiling = (content, annotations, id) => {
     const dateUpdated = Date.now();
-console.log(id)
+
     const { form, fileName } = values;
+
+    console.log(id)
 
     if (!id) {
       firestore
         .collection("filings")
         .add({
-          content,
+          content: content,
           userId: currentUser,
           dateCreated: dateUpdated,
           dateUpdated: dateUpdated,
           form: form,
           fileName: fileName,
+          annotations: annotations,
         })
         .then(function (docRef) {
           setValues({
@@ -82,6 +95,7 @@ console.log(id)
             id: docRef.id,
             content,
             userId: currentUser,
+            annotations,
           });
         })
         .catch(function (error) {
@@ -92,11 +106,16 @@ console.log(id)
       setValues({
         ...values,
         content,
+        annotations,
       });
-      firestore.collection("filings").doc(id).update({
-        content,
-        dateUpdated: dateUpdated,
-      });
+      firestore
+        .collection("filings")
+        .doc(id)
+        .update({
+          content: content,
+          dateUpdated: dateUpdated,
+          annotations: annotations,
+        });
     }
   };
 
@@ -105,17 +124,15 @@ console.log(id)
   };
 
   const handleChange = (name) => (event) => {
-    console.log(event.target);
     setValues({ ...values, [name]: event.target.value });
   };
 
   const handleFormChange = (event) => {
-    console.log(event.target.value);
     setValues({
       ...values,
       file: event.target.value,
       form: event.target.value.name,
-      fileName: event.target.value.file,
+      fileName: event.target.value.fileName,
     });
   };
   // Show a message while todos are loading
@@ -162,7 +179,7 @@ console.log(id)
           handleSetEditorClosed={handleSetEditorClosed}
           values={values}
           saveFiling={saveFiling}
-          id
+          id={values.id}
         />
       </>
     );
@@ -214,8 +231,17 @@ console.log(id)
       name: "content",
       label: "Content",
       options: {
-        filter: true,
-        sort: true,
+        filter: false,
+        sort: false,
+        display: false,
+      },
+    },
+    {
+      name: "annotations",
+      label: "Annotations",
+      options: {
+        filter: false,
+        sort: false,
         display: false,
       },
     },
@@ -225,7 +251,7 @@ console.log(id)
       options: {
         filter: true,
         sort: true,
-        display: false,
+        display: true,
       },
     },
     {
@@ -254,8 +280,8 @@ console.log(id)
             columns={columns}
             options={{
               filterType: "checkbox",
-              onRowsDelete: deleteFilings,
             }}
+            onRowsDelete={handleDeleteFilings}
             title={"Forms"}
           />
         </Grid>
@@ -275,6 +301,14 @@ console.log(id)
         values={values}
         saveFiling={saveFiling}
       />
+      <ConfirmDialog
+        title="Delete Form(s)?"
+        open={confirmOpen}
+        setOpen={setConfirmOpen}
+        onConfirm={deleteFilings}
+      >
+        Are you sure? This action cannot be undone.
+      </ConfirmDialog>
     </>
   );
 }

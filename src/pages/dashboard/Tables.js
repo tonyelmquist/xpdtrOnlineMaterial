@@ -24,7 +24,6 @@ const Tables = (props) => {
   const { table, hideTable } = props;
 
   var classes = useStyles();
-  var theme = useTheme();
   return (
     <Dialog
       maxWidth={"xl"}

@@ -2,45 +2,43 @@ import React, { useState, useEffect } from "react";
 
 import { Grid } from "@material-ui/core";
 import { useTheme } from "@material-ui/styles";
-import DashboardIcon from "@material-ui/icons/Dashboard";
-import GridOnIcon from "@material-ui/icons/GridOn";
 
 import axios from "axios";
 // styles
 import useStyles from "./styles";
-import Fab from "@material-ui/core/Fab";
-import PageTitle from "../../components/PageTitle/PageTitle";
 import Loading from "../../components/Loading/Loading";
 import Tables from "./Tables";
 import Charts from "./Charts";
 
-
-
 import Fade from "@material-ui/core/Fade";
 
 export default function Dashboard(props) {
-  
-  const { contacts, projects, buildings } = props;
-
-  var classes = useStyles();
-
-  var theme = useTheme();
+  const {
+    contacts,
+    projects,
+    buildings,
+    buildingFiltered,
+    projectsFiltered,
+    contactsFiltered,
+  } = props;
 
   const [table, setTables] = useState({
     showTable: false,
     tableToShow: 0,
     data: [],
-    title: ""
+    title: "",
   });
 
   const showTable = (tableToShow, data, title) => {
-    
     setTables({ showTable: true, tableToShow, data, title });
   };
 
   const hideTable = () => {
     setTables({ showTable: false, tableToShow: 0, data: [] });
   };
+
+  const somethingFiltered =
+    buildingFiltered || projectsFiltered || contactsFiltered;
 
   var [DOBData, setDOBData] = useState({
     DOBData: [],
@@ -76,7 +74,6 @@ export default function Dashboard(props) {
         ecb,
         electricalNow,
       ]) => {
-        console.log(asbestos);
         setDOBData({
           DOBData,
           DOBNowData,
@@ -94,7 +91,9 @@ export default function Dashboard(props) {
     );
   }, [contacts, projects, buildings]);
 
-  var applicantLicenseNumbers =
+  let queryArray = [];
+
+  const applicantLicenseNumbers =
     contacts &&
     contacts
       .map((contact) => {
@@ -102,7 +101,12 @@ export default function Dashboard(props) {
       })
       .filter((contact) => contact);
 
-  var BINs =
+
+  applicantLicenseNumbers.length > 0 &&
+    (!somethingFiltered) &&
+    queryArray.push(`applicant_license__%20in(${applicantLicenseNumbers})`);
+
+  const BINs =
     buildings &&
     buildings
       .map((building) => {
@@ -110,13 +114,25 @@ export default function Dashboard(props) {
       })
       .filter((bin) => bin);
 
-  var projectBIS =
+  BINs.length > 0 &&
+    (!somethingFiltered) &&
+    queryArray.push(`bin__%20in(${BINs})`);
+
+  const projectBIS =
     projects &&
     projects
       .map((project) => {
         if (project.BIS) return `"${projects.BIS}"`;
       })
       .filter((bis) => bis);
+
+  projectBIS.length > 0 &&
+    (!somethingFiltered) &&
+    queryArray.push(`job__%20in(${projectBIS})`);
+
+  console.log(queryArray);
+
+  const concatenatedQueryString = queryArray.join(" OR ");
 
   const getPermits = () => {
     return axios
@@ -219,7 +235,7 @@ export default function Dashboard(props) {
   const getDOBJobs = () => {
     return axios
       .get(
-        `https://data.cityofnewyork.us/resource/rvhx-8trz.json?$where=applicant_license__%20in(${applicantLicenseNumbers}) OR job__%20in(${projectBIS}) OR bin__%20in(${BINs})`,
+        `https://data.cityofnewyork.us/resource/rvhx-8trz.json?$where=${concatenatedQueryString}`,
       )
       .then((response) => {
         return response.data;
@@ -248,10 +264,12 @@ export default function Dashboard(props) {
     "#AAAAAA",
   ];
 
+  console.log(concatenatedQueryString);
+
   const getDOBNowJobs = () => {
     return axios
       .get(
-        `https://data.cityofnewyork.us/resource/w9ak-ipjd.json?$where=applicant_license%20in(${applicantLicenseNumbers}) OR job_filing_number%20in(${projectBIS}) OR bin%20in(${BINs})`,
+        `https://data.cityofnewyork.us/resource/w9ak-ipjd.json?$where=${concatenatedQueryString}`,
       )
       .then((response) => {
         return response.data;
@@ -300,7 +318,6 @@ export default function Dashboard(props) {
   return (
     <>
       <Tables table={table} hideTable={hideTable} />
-
       <Charts DOBData={DOBData} colors={colors} showTable={showTable} />
     </>
   );

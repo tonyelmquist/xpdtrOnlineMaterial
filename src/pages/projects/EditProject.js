@@ -152,6 +152,18 @@ export default function EditProject(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
+                id="jobId"
+                label="Job number"
+                className={classes.textField}
+                value={values.jobNumber}
+                onChange={handleChange("jobNumber")}
+                margin="normal"
+                variant="outlined"
+                fullWidth
+              ></TextField>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
                 id="building"
                 label="Building"
                 className={classes.textField}

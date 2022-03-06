@@ -1,0 +1,10 @@
+version: '3.4' 
+
+services: 
+  pdfviewer-server: 
+    image: 
+    environment: 
+      #Provide your license key for activation
+      SYNCFUSION_LICENSE_KEY: NTYxNTk1QDMxMzkyZTM0MmUzMFFob2VPMy9vQkdBVTdyVFQ5UHkzK3FNbVFKOXZVc1F4SDFNU1RmTmNoSUU9
+    ports:
+    - "8080:80"

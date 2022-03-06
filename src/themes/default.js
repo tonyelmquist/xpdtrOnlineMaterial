@@ -109,10 +109,16 @@ export default {
         fontSize: "0.95rem",
       },
     },
-    MUIDataTableBodyCell: {
+    MuiDataTableBodyCell: {
       stackedCommon: {
-        height: "auto"
-      }
-    }
+        height: "auto",
+      },
+    },
+    MuiChip: {
+      root: {
+        marginRight: "20px",
+        padding: "0 0 0 10px",
+      },
+    },
   },
 };

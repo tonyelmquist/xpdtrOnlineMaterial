@@ -119,7 +119,7 @@ export default function Header(props) {
     // check.php must get the list of all users from Paddle, then see if current user is among Pro users.
     const userEmail = currentUser;
     const PRODUCT_ID = 576518; //See this ID in the Paddle dashboard.
-    const URL = "http://beta.xpdtr.com/check.php";
+    const URL = "https://beta.xpdtr.com/check.php";
     const data = {
       email: userEmail,
       productID: PRODUCT_ID,
@@ -136,6 +136,7 @@ export default function Header(props) {
       .then((res) => res.text())
       .then((response) => {
         let res = JSON.parse(response);
+        console.log(res)
         //PHP script returns an object.
         if (res.isPro === "true") {
           setPro(layoutDispatch);
@@ -144,7 +145,6 @@ export default function Header(props) {
         }
       })
       .catch((error) => console.error("Error:", error));
-    setPro(layoutDispatch);
   };
 
   useEffect(() => {
@@ -253,6 +253,7 @@ export default function Header(props) {
             icon={<BuildingIcon />}
             label={buildingCustomerReference}
             color="secondary"
+            className={"headerChip"}
             onDelete={() => clearBuilding(layoutDispatch)}
           />
         )}
@@ -262,6 +263,7 @@ export default function Header(props) {
             icon={<PeopleIcon />}
             label={contactFullName}
             color="secondary"
+            className={"headerChip"}
             onDelete={() => clearContact(layoutDispatch)}
           />
         )}
@@ -270,6 +272,7 @@ export default function Header(props) {
             icon={<FolderOpen />}
             label={projectFullName}
             color="secondary"
+            className={"headerChip"}
             onDelete={() => clearProject(layoutDispatch)}
           />
         )}
@@ -297,7 +300,7 @@ export default function Header(props) {
             
           /> 
         </div>*/}
-        {layoutState.isPro && (
+        {!layoutState.isPro && (
           <Button
             size="large"
             color="secondary"

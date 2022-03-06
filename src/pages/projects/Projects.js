@@ -194,7 +194,7 @@ function Projects() {
       },
     },
     {
-      name: "BIS",
+      name: "jobNumber",
       label: "Job Number",
       options: {
         filter: true,
